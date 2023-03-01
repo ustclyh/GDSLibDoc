@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="zh-CN" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started &mdash; GDSLib_gdstk 0.0 文档</title>
+  <title>Get Started &mdash; GDSLib_gdstk 0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,10 +16,9 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/translations.js"></script>
     <script src="_static/js/theme.js"></script>
-    <link rel="index" title="索引" href="genindex.html" />
-    <link rel="search" title="搜索" href="search.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Reference" href="reference_python.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
@@ -37,16 +36,19 @@
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="搜索文档" aria-label="搜索文档" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Get Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#waveguide">Waveguide 类</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="reference_python.html">API Reference</a></li>
 </ul>
 
@@ -54,17 +56,17 @@
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">GDSLib_gdstk</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="页面导航">
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="breadcrumb-item active">Get Started</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -73,22 +75,69 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading"></a></h1>
+  <section id="get-started">
+<h1>Get Started<a class="headerlink" href="#get-started" title="Permalink to this heading"></a></h1>
+<section id="waveguide">
+<h2>Waveguide 类<a class="headerlink" href="#waveguide" title="Permalink to this heading"></a></h2>
+<p>首先简要介绍该类的实现思路。Waveguide 类主要调用 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath</span></code> 生成波导几何结构，每当调用生成几何结构的方法，
+Waveguide 类将创建 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath</span></code> 对象，自动对 Path 起始点等几何参数进行初始化；
+并调用 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath.to_polygon()</span></code> 生成多边形坐标；最后，调用 <code class="docutils literal notranslate"><span class="pre">add_object()</span></code> 方法将多边形坐标保存至列表
+<code class="docutils literal notranslate"><span class="pre">polygons</span></code> ，并将对应layer及datatype信息同步保存至列表 <code class="docutils literal notranslate"><span class="pre">layers</span></code> 和 <code class="docutils literal notranslate"><span class="pre">datatypes</span></code>。</p>
+<p>此外，Waveguide类还提供了 <code class="docutils literal notranslate"><span class="pre">generate_pcell()</span></code> 方法，基于 <code class="docutils literal notranslate"><span class="pre">polygons</span></code> ， <code class="docutils literal notranslate"><span class="pre">layers</span></code> 和 <code class="docutils literal notranslate"><span class="pre">datatypes</span></code> 三个列表，
+通过调用 <code class="docutils literal notranslate"><span class="pre">gdstk.Polygon</span></code> 生成结构，并放置于 <code class="docutils literal notranslate"><span class="pre">gdstk.Cell</span></code> 之上，从而返回 PCell，用于更高层次 Device 对象的构建。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Waveguide</span></code> 中 <code class="docutils literal notranslate"><span class="pre">turn</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">turn</span></code> 方法，由于 gdstk 包的bug，是基于 <code class="docutils literal notranslate"><span class="pre">gdstk.ellipse</span></code> 实现的，
+待 gdstk 中 bug 修复后该方法的实现会同步修改。同理， gdstk 包中 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath.parametric</span></code> 也存在类似 bug，
+为了保证不同波导段能够完美连接， <code class="docutils literal notranslate"><span class="pre">spline</span></code> 方法在欧拉曲线的头和尾增加了 1 um 的缓冲区，即与头尾斜率一致的直线段，
+因此，当前版本如果使用 <code class="docutils literal notranslate"><span class="pre">spline</span></code> 方法构建波导，不建议收尾曲率非 0。</p>
+</div>
+<p>下面列举一个使用 Waveguide 类的例子</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gdspy</span>
+<span class="kn">from</span> <span class="nn">ElementStructures</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># The GDSII file is called a library, which contains multiple cells.</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">gdspy</span><span class="o">.</span><span class="n">GdsLibrary</span><span class="p">()</span>
+
+<span class="c1"># initialize a waveguide with starting point at (0, 0) and width of 2.4 um on layer 0</span>
+<span class="c1"># there is also a heater with width of 0.5 um on layer 2</span>
+<span class="c1"># the paths of waveguide and its heater are the same</span>
+<span class="n">testPath</span> <span class="o">=</span> <span class="n">Waveguide</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">precision</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="n">testPath</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">testPath</span><span class="o">.</span><span class="n">turn</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">testPath</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">testPath</span><span class="o">.</span><span class="n">turn</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">testPath</span><span class="o">.</span><span class="n">spline</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">testPath</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># generate the PCell and put the PCell in library</span>
+<span class="n">lib</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">testPath</span><span class="o">.</span><span class="n">generate_pcell</span><span class="p">(</span><span class="s1">&#39;FIRST&#39;</span><span class="p">))</span>
+<span class="c1"># write the gds file</span>
+<span class="n">lib</span><span class="o">.</span><span class="n">write_gds</span><span class="p">(</span><span class="s2">&quot;first.gds&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在上述例子中，我们首先初始化了 Waveguide 类，起始点为 [0, 0]，而宽度为 [2.4, 0.5]。
+事实上，能够给宽度一个list，是 gdstk 相较于 gdspy 新增的 feature，
+即可以通过给宽度一个 list，从而直接得到多条路径重合的 Path，十分适合于与 Waveguide 重合的 heater 构建。</p>
+</div>
+<p>上述代码所得 gds 文件，其中图形如下图：</p>
+<a class="reference internal image-reference" href="_images/1.png"><img alt="alternate text" class="align-center" src="_images/1.png" style="width: 600px;" /></a>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
-        <a href="reference_python.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference_python.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; 版权所有 2023, Yihan Luo.</p>
+    <p>&#169; Copyright 2023, Yihan Luo.</p>
   </div>
 
    
