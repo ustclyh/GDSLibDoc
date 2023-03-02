@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="First GDSII" href="gettingstarted.html" /> 
+    <link rel="prev" title="Get Started" href="gettingstarted.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,7 +44,7 @@
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">First GDSII</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Get Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#compatibility-adaptation">Compatibility adaptation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#polygonset">PolygonSet</a></li>
@@ -52,7 +52,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-waveguide-element">Basic Waveguide Element</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#waveguide">Waveguide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#waveguide">Waveguide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#devices">Devices</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#device">Device</a></li>
 </ul>
 </li>
 </ul>
@@ -91,7 +95,7 @@
 <h3>PolygonSet<a class="headerlink" href="#polygonset" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">PolygonSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">PolygonSet</span></span></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>PolygenSet 类.</p>
 <p>该类为器件定义的基础类，其中仅存储定义器件的多边形数据，多边形所处**layer**和datatype与之在index上需一一对应.</p>
@@ -411,6 +415,122 @@
 
 </dd></dl>
 
+<section id="devices">
+<h4>Devices<a class="headerlink" href="#devices" title="Permalink to this heading"></a></h4>
+</section>
+</section>
+<section id="device">
+<h3>Device<a class="headerlink" href="#device" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Devices.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PolygonSet</span></code></p>
+<p>Device 类.</p>
+<p>该类为 Device 中器件构建提供了通用方法.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – 器件的名称.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_polygons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PolygonSet</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>合并 PolygonSet 类，该方法会将输入 PolygonSet 类中的 polygons 以及 layers 和 datatypes 列表与当前 Device
+对象合并。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>elem</strong> (<em>PolygonSet</em>) – 被合并的 PolygonSet 对象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Polygon</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加 Polygon，并自动获取 elem 中的 layer 和 datatype 信息添加</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>elem</strong> (<em>gdstk.Polygon</em>) – 被添加的 gdstk.Polygon 对象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_waveguide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Waveguide</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>合并 Waveguide 类，该方法会将输入 Waveguide 类中的 polygons 以及 layers 和 datatypes 列表与当前 Device
+对象合并。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>wg</strong> (<em>Waveguide</em>) – 被合并的 Waveguide 对象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">box</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>根据当前器件中存储的多边形，计算该器件的外部边界，以之更新 self.outerbox ，并返回该边界（左下和右上的坐标）。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>out</strong> – 当前几何的边界（左下和右上的坐标）</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array[2][2]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">draw_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>绘制边框，放置于 layer 10。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">generate_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>基于当前的几何存储，将其放置于 PCell 并返回。此外，将此 PCell 对象存储于 Device 的静态字典 Device.devList 中，
+键值为 label (若 label 为 Name 则键值为器件的 name)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – 器件的标签，作为 PCell 对象存储于 Device 静态字典 Device.devList 中的键值。默认值为器件的 name，但
+若需要重复生成参数不同的同类 Device，不修改 name 会导致后加入的 PCell 覆盖先加入的 PCell。</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – 放置当前几何的 PCell</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gdstk.Cell</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">clearall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>清除所有几何对象。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">generate_pcell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>根据当前所存储的多边形, 以及对应layer和datatype, 生成 <cite>gdstk.PCell</cite>, 用于进一步放置更高层次的Cell中.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – 放置当前PolygonSet所存储多边形的PCell.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gdstk.Pcell</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 </section>
@@ -419,7 +539,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="gettingstarted.html" class="btn btn-neutral float-left" title="First GDSII" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gettingstarted.html" class="btn btn-neutral float-left" title="Get Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
