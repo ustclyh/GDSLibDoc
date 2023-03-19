@@ -47,12 +47,8 @@
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Get Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#compatibility-adaptation">Compatibility adaptation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#polygonset">PolygonSet</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#path">Path</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#basic-waveguide-element">Basic Waveguide Element</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#waveguide">Waveguide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#polygons">Polygons</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#paths">Paths</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#devices">Devices</a><ul>
@@ -91,90 +87,121 @@
 <section id="compatibility-adaptation">
 <h2>Compatibility adaptation<a class="headerlink" href="#compatibility-adaptation" title="Permalink to this heading"></a></h2>
 <p>这一部分主要完成原有器件库与 <code class="docutils literal notranslate"><span class="pre">gdstk</span></code> 间的兼容性匹配.</p>
-<section id="polygonset">
-<h3>PolygonSet<a class="headerlink" href="#polygonset" title="Permalink to this heading"></a></h3>
+<section id="polygons">
+<h3>Polygons<a class="headerlink" href="#polygons" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">PolygonSet</span></span></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">Polygons</span></span></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>PolygenSet 类.</p>
-<p>该类为器件定义的基础类，其中仅存储定义器件的多边形数据，多边形所处**layer**和datatype与之在index上需一一对应.</p>
+<p>Polygons 类</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polygon_list</strong> (<em>list of gdstk.Polygon object</em>) – 存储多边形对象的表.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_polygon_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Polygon</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加已有 gdstk.Polygon 对象。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> (<em>gdstk.Polygon object</em>) – 被添加的 gdstk.Polygon 对象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>基于顶点坐标添加 gdstk.Polygon 至 polygon_list。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xy</strong> (<em>array</em><em>[</em><em>N</em><em>]</em><em>[</em><em>2</em><em>] </em><em>like list</em>) – 定义多边形的坐标</p></li>
+<li><p><strong>layer</strong> (<em>int</em>) – 放置该多边形的 layer</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="paths">
+<h3>Paths<a class="headerlink" href="#paths" title="Permalink to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">Paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Paths 类</p>
+<p>该类用于构建由多边形定义的路径。其方法分为两大类：路径初始化和结束；路径的绘制。</p>
+<p>基本使用逻辑为：使用 <code class="docutils literal notranslate"><span class="pre">new_path</span></code> 方法初始化一条路径，随后通过若干 <code class="docutils literal notranslate"><span class="pre">add_*</span></code> 格式的方法，加入
+直线，弯曲以及spline 等路径。当一条路径绘制完成后，调用 <code class="docutils literal notranslate"><span class="pre">end_current_path</span></code> 方法，将此路径添加入 <code class="docutils literal notranslate"><span class="pre">path_list</span></code> 。
+重复以上过程，将若干路径加入 <code class="docutils literal notranslate"><span class="pre">path_list</span></code> ，当完成全部路径定义后，调用 <code class="docutils literal notranslate"><span class="pre">generate_pcell</span></code> 方法，
+从当前 <code class="docutils literal notranslate"><span class="pre">path_list</span></code> 生成Pcell。</p>
+<p>当连续调用  <code class="docutils literal notranslate"><span class="pre">add_*</span></code> 格式的方法时，该类会自动记录路径末端的坐标、斜率以及曲率，用于所添加路径的自动平滑拼接。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>polygons</strong> (<em>list of array-like</em><em>[</em><em>N</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 多边形定点XY坐标的列表.</p></li>
-<li><p><strong>layers</strong> (<em>list of int</em>) – 多边形所处layer的列表</p></li>
-<li><p><strong>datatypes</strong> (<em>list of int</em>) – 多边形所在datatype的列表</p></li>
+<li><p><strong>poth_list</strong> (<em>list of gdstk.RobustPath object</em>) – 存储路径对象的表.</p></li>
+<li><p><strong>curPath</strong> (<em>gdstk.RobustPath</em>) – 当前正在操纵的路径对象</p></li>
+<li><p><strong>curPosition</strong> (<em>array</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 当前路径末端坐标</p></li>
+<li><p><strong>curWidth</strong> (<em>double</em>) – 当前路径末端宽度</p></li>
+<li><p><strong>curAngle</strong> (<em>double</em>) – 当前路径末端角度</p></li>
+<li><p><strong>curCurvature</strong> (<em>double</em>) – 当前路径末端曲率</p></li>
 </ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>precision</strong> (<em>double</em>) – 求解精度</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">generate_pcell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>根据当前所存储的多边形, 以及对应layer和datatype, 生成 <cite>gdstk.PCell</cite>, 用于进一步放置更高层次的Cell中.</p>
+<dd><p>基于当前path_list生成Pcell.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – 放置当前PolygonSet所存储多边形的PCell.</p>
+<dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>gdstk.Pcell</p>
+<dd class="field-odd"><p>gdstk.Cell object</p>
 </dd>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-</section>
-<section id="path">
-<h3>Path<a class="headerlink" href="#path" title="Permalink to this heading"></a></h3>
-<dl class="py class">
-<dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">Path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PolygonSet</span></code></p>
-<p>Path 类.</p>
-<p>用于 gdstk 与此前基于 gdspy 所构建器件库间的兼容性适配. 由于 gdstk 包的 arc 以及 turn 存在些许问题，故
-此类中的 arc 以及 turn 方法基于 gdstk.ellipse 实现.</p>
-<p>此类中与图形生成相关的方法，其自动拼接由类接管, 因此任意一段路径都可以指定其位于某一特定 layer 及 datatype上.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>endWidth</strong> (<em>double</em><em> or </em><em>list of double</em>) – path末端的宽度的列表, 随后会根据调用生成路径的具体方法，自动更新.</p></li>
-<li><p><strong>endAngle</strong> (<em>double</em>) – path末端切线的方向，在类初始化时默认取为0, 随后会根据调用生成路径的具体方法，自动更新.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>start</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 路径起始点的坐标.</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 路径的宽度，该参数可以给成列表，若如此做，则会生成多条完全重合，而宽度不同的路径.
-该feature当需要生成与路径重合的heater时，会较为便捷.</p></li>
-<li><p><strong>precision</strong> (<em>double</em>) – path图形的取样精度，默认为1e-3, 精度提升会导致文件变大，以及计算时间增加.</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">set_init_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>更改 endAngle 属性，在极特殊情况下才需要手动干预.</p>
+<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>开始一段新路径.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>angle</strong> (<em>int</em>) – endAngle的新值</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gdstk.Cell object</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>开始一条新路径绘制， 将会重置类参数，但不会清空已经存储的 polygons.</p>
+<span class="sig-name descname"><span class="pre">end_current_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>将当前路径添加入path_list，并结束当前路径，并根据情况开始一段新路径. 当start参数非空时，会开始一段新路径.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>int</em>) – 新路径起始点的坐标.</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>list of double</em>) – 新路径的宽度</p></li>
-<li><p><strong>precision</strong> (<em>double</em>) – 新路径的绘制精度</p></li>
+<li><p><strong>start</strong> (<em>array</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 新路径起始坐标</p></li>
+<li><p><strong>width</strong> (<em>array</em>) – 路径宽度</p></li>
+<li><p><strong>layers</strong> (<em>array</em>) – 放置路径的layer</p></li>
+<li><p><strong>max_evals</strong> (<em>int</em>) – 生成多边形时，计算的点数. 当需求的多边形顶点超过此数后，路径将生成不全.</p></li>
+<li><p><strong>add_copy</strong> (<em>boolean</em>) – 如果为真，加入path_list的是当前路径的一个拷贝，接下来如果进一步对此路径进行镜像等操作，将不会影响已经添加路径的结果.</p></li>
+<li><p><strong>auto_new</strong> (<em>boolean</em>) – 当start为空时，若auto_new为真，将自动在原地，以原先宽度初始化一段新路径</p></li>
 </ul>
 </dd>
 </dl>
@@ -182,16 +209,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>生成一个直线段，并加入 polygons list.</p>
+<span class="sig-name descname"><span class="pre">add_segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>为当前路径添加新的segment.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>length</strong> (<em>int</em>) – 线段长度</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 线段的末端宽度（起始宽度以上一段路径结束时为准，无法手动干预），可用于绘制taper</p></li>
-<li><p><strong>direction</strong> (<em>double</em>) – 线段的方向，默认为None，此时方向取为 self.endAngle</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
+<li><p><strong>length</strong> (<em>double</em>) – 长度</p></li>
+<li><p><strong>direction</strong> (<em>double</em>) – 方向</p></li>
+<li><p><strong>width</strong> (<em>double</em>) – 宽度</p></li>
 </ul>
 </dd>
 </dl>
@@ -199,34 +224,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'natural'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flush'</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>将多个线段加入 polygons list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>points</strong> (<em>array-like</em><em>[</em><em>N</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 线段终点相对于起始点的XY坐标</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 线段的末端宽度（起始宽度以上一段路径结束时为准，无法手动干预），可用于绘制taper</p></li>
-<li><p><strong>join</strong> (<em>str</em>) – 线段的连接方式，见gdstk.FlexPath文档</p></li>
-<li><p><strong>end</strong> (<em>str</em>) – 线段的端面形状，见gdstk.FlexPath文档，此参数一般无需修改，取默认值即可</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>将路径转弯加入 self.path</p>
+<span class="sig-name descname"><span class="pre">add_turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>为当前路径添加新的转弯.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> (<em>double</em>) – 半径</p></li>
-<li><p><strong>angle</strong> (<em>double</em>) – 转角，向左为正，向右为负</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 线段的末端宽度（起始宽度以上一段路径结束时为准，无法手动干预）</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
+<li><p><strong>angle</strong> (<em>double</em>) – 角度</p></li>
+<li><p><strong>width</strong> (<em>double</em>) – 宽度</p></li>
 </ul>
 </dd>
 </dl>
@@ -234,94 +239,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>将路径对象转为多边形顶点XY坐标存入 polygons，用户可基于此方法添加该类未提供的图形。</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<em>gdstk element class</em>) – 可以接受对象为 gdstk.FlexPath 或 gdstk.Polygon</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition-notes admonition">
-<p class="admonition-title">Notes</p>
-<p>当输入对象为 FlexPath 时，注意 layer 和 datatype 需要与 <code class="docutils literal notranslate"><span class="pre">FlexPath.to_polygons()</span></code> 生成的列表长度一致.</p>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-</section>
-<section id="basic-waveguide-element">
-<h2>Basic Waveguide Element<a class="headerlink" href="#basic-waveguide-element" title="Permalink to this heading"></a></h2>
-<section id="waveguide">
-<h3>Waveguide<a class="headerlink" href="#waveguide" title="Permalink to this heading"></a></h3>
-<dl class="py class">
-<dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">Waveguide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></p>
-<p>Waveguide 类.</p>
-<p>基于Path类构建，额外提供了taper构建方法，以及基于阿基米德螺旋线的波导构建方法。</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>total_length_list</strong> (<em>list of double</em>) – 存储每根波导的总长.</p></li>
-<li><p><strong>taperLength</strong> (<em>double</em>) – 用于定义taper，为过渡至taper部分长度.</p></li>
-<li><p><strong>taperWidth</strong> (<em>double</em>) – 用于定义taper，为taper部分宽度</p></li>
-<li><p><strong>endLength</strong> (<em>double</em>) – 用于定义taper，为波导收窄后伸出部分的长度.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>start</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 路径起始点的坐标.</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 路径的宽度，该参数可以给成列表，若如此做，则会生成多条完全重合，而宽度不同的路径.
-该feature当需要生成与路径重合的heater时，会较为便捷.</p></li>
-<li><p><strong>layer</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 放置路径的layer，与宽度定义一一对应，若取为默认值None，则会放置于layer 0.</p></li>
-<li><p><strong>datatype</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – datatype，与宽度定义一一对应，若取为默认值None，则datatype = 0.</p></li>
-<li><p><strong>precision</strong> (<em>double</em>) – path图形的取样精度，默认为1e-3.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>生成一个直线段，并加入 polygons list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>length</strong> (<em>int</em>) – 线段长度</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 线段的末端宽度（起始宽度以上一段路径结束时为准，无法手动干预），可用于绘制taper</p></li>
-<li><p><strong>direction</strong> (<em>double</em>) – 线段的方向，默认为None，此时方向取为 self.endAngle</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>将路径转弯加入 self.path</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>radius</strong> (<em>double</em>) – 半径</p></li>
-<li><p><strong>angle</strong> (<em>double</em>) – 转角，向左为正，向右为负</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 线段的末端宽度（起始宽度以上一段路径结束时为准，无法手动干预）</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">spline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<span class="sig-name descname"><span class="pre">add_spline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>生成欧拉曲线，曲线起点会自动采用Waveguide的末端点坐标、切向角度以及曲率，末端由ncp给出.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -329,86 +247,6 @@
 <li><p><strong>ncp</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>4</em><em>]</em>) – ncp包含定义该曲线的四个参数：dx, dy, 末端角度[rad], 末端曲率.</p></li>
 <li><p><strong>symm</strong> (<em>boolean</em>) – 是否强制曲线关于中心点对称.</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>将路径对象转为多边形顶点XY坐标存入 polygons，用户可基于此方法添加该类未提供的图形。</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<em>gdstk element class</em>) – 可以接受对象为 gdstk.FlexPath 或 gdstk.Polygon</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition-notes admonition">
-<p class="admonition-title">Notes</p>
-<p>当输入对象为 FlexPath 时，注意 layer 和 datatype 需要与 <code class="docutils literal notranslate"><span class="pre">FlexPath.to_polygons()</span></code> 生成的列表长度一致.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">generate_pcell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>根据当前所存储的多边形, 以及对应layer和datatype, 生成 <cite>gdstk.PCell</cite>, 用于进一步放置更高层次的Cell中.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – 放置当前PolygonSet所存储多边形的PCell.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>gdstk.Pcell</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>开始一条新路径绘制， 将会重置类参数，但不会清空已经存储的 polygons.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>int</em>) – 新路径起始点的坐标.</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>list of double</em>) – 新路径的宽度</p></li>
-<li><p><strong>precision</strong> (<em>double</em>) – 新路径的绘制精度</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'natural'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'flush'</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>将多个线段加入 polygons list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>points</strong> (<em>array-like</em><em>[</em><em>N</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 线段终点相对于起始点的XY坐标</p></li>
-<li><p><strong>width</strong> (<em>double</em><em> or </em><em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>N</em><em>]</em>) – 线段的末端宽度（起始宽度以上一段路径结束时为准，无法手动干预），可用于绘制taper</p></li>
-<li><p><strong>join</strong> (<em>str</em>) – 线段的连接方式，见gdstk.FlexPath文档</p></li>
-<li><p><strong>end</strong> (<em>str</em>) – 线段的端面形状，见gdstk.FlexPath文档，此参数一般无需修改，取默认值即可</p></li>
-<li><p><strong>layer</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-<li><p><strong>datatype</strong> (<em>int</em><em> or </em><em>list of int</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">set_init_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>更改 endAngle 属性，在极特殊情况下才需要手动干预.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>angle</strong> (<em>int</em>) – endAngle的新值</p>
 </dd>
 </dl>
 </dd></dl>
@@ -424,9 +262,17 @@
 <dl class="py class">
 <dt class="sig sig-object py">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Devices.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PolygonSet</span></code></p>
-<p>Device 类.
-该类应当是 Devices 中所有器件的父类， Device 提供了器件构建的通用方法.</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Paths</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Polygons</span></code></p>
+<p>Device 类</p>
+<p>该类应当是 Devices 中所有器件的父类， Device 提供了器件构建的通用方法。
+此外，在一次芯片构建过程中，所需所有的PCell的实例，均需以字典的形式存储于类的静态属性 devList 中，相应的
+端口信息，以字典的形式存储于静态属性 devDict 中。</p>
+<p>此类继承了 Paths 和 Polygons，因此其中包含存储器件所包含路径以及多边形的列表。此外，此类还添加了
+与端口相关的属性，用于系统级的芯片构建。</p>
+<p>当器件几何结构定义完成后，即可调用 generate_cell 方法，基于当前几何结构生成 PCell ，并将此 PCell 注册。
+generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
+<p>该类还提供了静态方法，用于将由程序包 gdsfactory 生成的 Component 对象直接注册至器件的 PCell 列表，
+用于此程序包与基于 gdsfactory 所定义器件库的兼容性匹配。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – 器件的名称.</p>
@@ -434,97 +280,166 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_polygons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PolygonSet</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>合并 PolygonSet 类，该方法会将输入 PolygonSet 类中的 polygons 以及 layers 和 datatypes 列表与当前 Device
-对象合并。</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_gf_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>静态方法. 将 gdsfactory 生成的 Component 对象加入Device类的PCell字典. 此静态方法用于 gdsfactory 与此程序包的兼容.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>elem</strong> (<em>PolygonSet</em>) – 被合并的 PolygonSet 对象</p>
+<dd class="field-odd"><p><strong>obj</strong> (<em>gdsfactory.Component</em>) – 被导入的 gdsfactory.Component 对象</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Polygon</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>添加 Polygon，并自动获取 elem 中的 layer 和 datatype 信息添加</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write_gds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_to_gds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'debug.gds'</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>静态方法. 将 gdstk.Cell 写入 gds 文件. 此方法会递归地将被索引的全部 gdstk.Cell 对象加入gds library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>elem</strong> (<em>gdstk.Polygon</em>) – 被添加的 gdstk.Polygon 对象</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_to_gds</strong> (<em>gdstk.Cell</em>) – 需导出为 gds 文件的 gdstk.Cell 对象</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – gds 文件名, 默认为 debug.gds</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_waveguide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Waveguide</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>合并 Waveguide 类，该方法会将输入 Waveguide 类中的 polygons 以及 layers 和 datatypes 列表与当前 Device
-对象合并。</p>
+<span class="sig-name descname"><span class="pre">generate_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>基于当前 Device 中存储的结构，生成 PCell 对象 （gdstk.Cell），将其加入 Device 类的静态属性.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>wg</strong> (<em>Waveguide</em>) – 被合并的 Waveguide 对象</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label</strong> (<em>str</em>) – PCell的名字</p></li>
+<li><p><strong>rotation</strong> (<em>double</em>) – 旋转角度（弧度制）. 如果此属性不为 None, 则会将旋转后 Cell 的副本添加入</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">box</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>根据当前器件中存储的多边形，计算该器件的外部边界，以之更新 self.outerbox ，并返回该边界（左下和右上的坐标）。</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>out</strong> – 当前几何的边界（左下和右上的坐标）</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>array[2][2]</p>
-</dd>
-</dl>
+<span class="sig-name descname"><span class="pre">clear_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>清除当前 Device 中存储的结构.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">draw_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>绘制边框，放置于 layer 10。</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">generate_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>基于当前的几何存储，将其放置于 PCell 并返回。此外，将此 PCell 对象存储于 Device 的静态字典 Device.devList 中，
-键值为 label (若 label 为 Name 则键值为器件的 name)</p>
+<span class="sig-name descname"><span class="pre">add_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>基于顶点坐标添加 gdstk.Polygon 至 polygon_list。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>label</strong> (<em>str</em>) – 器件的标签，作为 PCell 对象存储于 Device 静态字典 Device.devList 中的键值。默认值为器件的 name，但
-若需要重复生成参数不同的同类 Device，不修改 name 会导致后加入的 PCell 覆盖先加入的 PCell。</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – 放置当前几何的 PCell</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>gdstk.Cell</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xy</strong> (<em>array</em><em>[</em><em>N</em><em>]</em><em>[</em><em>2</em><em>] </em><em>like list</em>) – 定义多边形的坐标</p></li>
+<li><p><strong>layer</strong> (<em>int</em>) – 放置该多边形的 layer</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">clearall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>清除所有几何对象。</p>
+<span class="sig-name descname"><span class="pre">add_polygon_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Polygon</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加已有 gdstk.Polygon 对象。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> (<em>gdstk.Polygon object</em>) – 被添加的 gdstk.Polygon 对象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>为当前路径添加新的segment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>double</em>) – 长度</p></li>
+<li><p><strong>direction</strong> (<em>double</em>) – 方向</p></li>
+<li><p><strong>width</strong> (<em>double</em>) – 宽度</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_spline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>生成欧拉曲线，曲线起点会自动采用Waveguide的末端点坐标、切向角度以及曲率，末端由ncp给出.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ncp</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>4</em><em>]</em>) – ncp包含定义该曲线的四个参数：dx, dy, 末端角度[rad], 末端曲率.</p></li>
+<li><p><strong>symm</strong> (<em>boolean</em>) – 是否强制曲线关于中心点对称.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>为当前路径添加新的转弯.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>double</em>) – 半径</p></li>
+<li><p><strong>angle</strong> (<em>double</em>) – 角度</p></li>
+<li><p><strong>width</strong> (<em>double</em>) – 宽度</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">end_current_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>将当前路径添加入path_list，并结束当前路径，并根据情况开始一段新路径. 当start参数非空时，会开始一段新路径.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>array</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 新路径起始坐标</p></li>
+<li><p><strong>width</strong> (<em>array</em>) – 路径宽度</p></li>
+<li><p><strong>layers</strong> (<em>array</em>) – 放置路径的layer</p></li>
+<li><p><strong>max_evals</strong> (<em>int</em>) – 生成多边形时，计算的点数. 当需求的多边形顶点超过此数后，路径将生成不全.</p></li>
+<li><p><strong>add_copy</strong> (<em>boolean</em>) – 如果为真，加入path_list的是当前路径的一个拷贝，接下来如果进一步对此路径进行镜像等操作，将不会影响已经添加路径的结果.</p></li>
+<li><p><strong>auto_new</strong> (<em>boolean</em>) – 当start为空时，若auto_new为真，将自动在原地，以原先宽度初始化一段新路径</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">generate_pcell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>根据当前所存储的多边形, 以及对应layer和datatype, 生成 <cite>gdstk.PCell</cite>, 用于进一步放置更高层次的Cell中.</p>
+<dd><p>基于当前path_list生成Pcell.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – 放置当前PolygonSet所存储多边形的PCell.</p>
+<dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>gdstk.Pcell</p>
+<dd class="field-odd"><p>gdstk.Cell object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>开始一段新路径.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gdstk.Cell object</p>
 </dd>
 </dl>
 </dd></dl>
