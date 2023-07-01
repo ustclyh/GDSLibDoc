@@ -46,8 +46,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Get Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#waveguide">Waveguide 类</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#device">Device 类</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#elementstructures">ElementStructures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#paths">Paths 类</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#device">Device 类</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -80,55 +83,74 @@
              
   <section id="get-started">
 <h1>Get Started<a class="headerlink" href="#get-started" title="Permalink to this heading"></a></h1>
-<section id="waveguide">
-<h2>Waveguide 类<a class="headerlink" href="#waveguide" title="Permalink to this heading"></a></h2>
-<p>首先简要介绍该类的实现思路。Waveguide 类主要调用 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath</span></code> 生成波导几何结构，每当调用生成几何结构的方法，
-Waveguide 类将创建 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath</span></code> 对象，自动对 Path 起始点等几何参数进行初始化；
-并调用 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath.to_polygon()</span></code> 生成多边形坐标；最后，调用 <code class="docutils literal notranslate"><span class="pre">add_object()</span></code> 方法将多边形坐标保存至列表
-<code class="docutils literal notranslate"><span class="pre">polygons</span></code> ，并将对应layer及datatype信息同步保存至列表 <code class="docutils literal notranslate"><span class="pre">layers</span></code> 和 <code class="docutils literal notranslate"><span class="pre">datatypes</span></code>。</p>
-<p>此外，Waveguide类还提供了 <code class="docutils literal notranslate"><span class="pre">generate_pcell()</span></code> 方法，基于 <code class="docutils literal notranslate"><span class="pre">polygons</span></code> ， <code class="docutils literal notranslate"><span class="pre">layers</span></code> 和 <code class="docutils literal notranslate"><span class="pre">datatypes</span></code> 三个列表，
-通过调用 <code class="docutils literal notranslate"><span class="pre">gdstk.Polygon</span></code> 生成结构，并放置于 <code class="docutils literal notranslate"><span class="pre">gdstk.Cell</span></code> 之上，从而返回 PCell，用于更高层次 Device 对象的构建。</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">Waveguide</span></code> 中 <code class="docutils literal notranslate"><span class="pre">turn</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">turn</span></code> 方法，由于 gdstk 包的bug，是基于 <code class="docutils literal notranslate"><span class="pre">gdstk.ellipse</span></code> 实现的，
-待 gdstk 中 bug 修复后该方法的实现会同步修改。同理， gdstk 包中 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath.parametric</span></code> 也存在类似 bug，
-为了保证不同波导段能够完美连接， <code class="docutils literal notranslate"><span class="pre">spline</span></code> 方法在欧拉曲线的头和尾增加了 1 um 的缓冲区，即与头尾斜率一致的直线段，
-因此，当前版本如果使用 <code class="docutils literal notranslate"><span class="pre">spline</span></code> 方法构建波导，不建议收尾曲率非 0。</p>
-</div>
-<p>下面列举一个使用 Waveguide 类的例子</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gdspy</span>
-<span class="kn">from</span> <span class="nn">ElementStructures</span> <span class="kn">import</span> <span class="n">Path</span>
+<p>程序包包含 ElementStructures, Devices以及ChipConstructors 三个层级.</p>
+<p>ElementStructures 封装了 gdstk 的三种对象, 即 <code class="docutils literal notranslate"><span class="pre">gdstk.RobustPath</span></code>, <code class="docutils literal notranslate"><span class="pre">gdstk.Polygons</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gdstk.Reference</span></code>.
+ElementStructures中的类  <code class="docutils literal notranslate"><span class="pre">Paths</span></code>, <code class="docutils literal notranslate"><span class="pre">Polygons</span></code> 和 <code class="docutils literal notranslate"><span class="pre">References</span></code> 均包含了存储对应 gdstk 对象的列表.
+此外 <code class="docutils literal notranslate"><span class="pre">Paths</span></code> 可单独使用, 用于生成简单结构, 方便基于 FDTD 的仿真.</p>
+<p>Devices 提供了构造器件的方法, 它是  <code class="docutils literal notranslate"><span class="pre">gdstk.RobustPath</span></code>, <code class="docutils literal notranslate"><span class="pre">gdstk.Polygons</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gdstk.Reference</span></code> 的子类, 继承了一切属性和方法.
+Devices 提供的方法 <code class="docutils literal notranslate"><span class="pre">generate_cell</span></code> 将自动融合其三个父类提供的列表, 将全部对象放置于一个 PCell 内, 并将此 PCell 注册于一可以随时调用的字典, 方便后续的芯片级操作.</p>
+<p>ChipConstructors 提供了多种生成 Devices 引用的方法, 完成芯片的最终 gds 导出.</p>
+<p>下面将按照上述层级对程序包的使用进行介绍.</p>
+<section id="elementstructures">
+<h2>ElementStructures<a class="headerlink" href="#elementstructures" title="Permalink to this heading"></a></h2>
+<section id="paths">
+<h3>Paths 类<a class="headerlink" href="#paths" title="Permalink to this heading"></a></h3>
+<p>Waveguide 类调用 <code class="docutils literal notranslate"><span class="pre">gdstk.RobustPath</span></code> 生成波导几何结构. 我们将结合以下例子说明此类的基本使用方法.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">gdstk</span>
+<span class="kn">from</span> <span class="nn">ElementStructures</span> <span class="kn">import</span> <span class="n">Paths</span>
 
-<span class="c1"># The GDSII file is called a library, which contains multiple cells.</span>
-<span class="n">lib</span> <span class="o">=</span> <span class="n">gdspy</span><span class="o">.</span><span class="n">GdsLibrary</span><span class="p">()</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">gdstk</span><span class="o">.</span><span class="n">Library</span><span class="p">(</span><span class="s1">&#39;library&#39;</span><span class="p">)</span>
 
-<span class="c1"># initialize a waveguide with starting point at (0, 0) and width of 2.4 um on layer 0</span>
-<span class="c1"># there is also a heater with width of 0.5 um on layer 2</span>
-<span class="c1"># the paths of waveguide and its heater are the same</span>
-<span class="n">testPath</span> <span class="o">=</span> <span class="n">Waveguide</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="n">layer</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">precision</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
-<span class="n">testPath</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">testPath</span><span class="o">.</span><span class="n">turn</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">testPath</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">testPath</span><span class="o">.</span><span class="n">turn</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">testPath</span><span class="o">.</span><span class="n">spline</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="n">testPath</span><span class="o">.</span><span class="n">segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="c1"># generate the PCell and put the PCell in library</span>
-<span class="n">lib</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">testPath</span><span class="o">.</span><span class="n">generate_pcell</span><span class="p">(</span><span class="s1">&#39;FIRST&#39;</span><span class="p">))</span>
-<span class="c1"># write the gds file</span>
-<span class="n">lib</span><span class="o">.</span><span class="n">write_gds</span><span class="p">(</span><span class="s2">&quot;first.gds&quot;</span><span class="p">)</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">Paths</span><span class="p">()</span>
+
+<span class="c1"># plot a racetrack ring</span>
+<span class="n">path</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">add_turn</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">add_turn</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="c1"># add a copy of current path, otherwise the follow mirror operation will influence this added path</span>
+<span class="c1"># change the &#39;add_copy&#39; parameter to &#39;false&#39; to see the different</span>
+<span class="n">path</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># mirror the above ring and add it to the path list</span>
+<span class="n">path</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">path</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+<span class="c1"># plot another waveguide, which is a straight one</span>
+<span class="n">path</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">35</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+<span class="c1"># generate PCell and add it to the GDS library</span>
+<span class="n">lib</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">generate_pcell</span><span class="p">(</span><span class="s1">&#39;MAIN&#39;</span><span class="p">))</span>
+<span class="c1"># write GDS file</span>
+<span class="n">lib</span><span class="o">.</span><span class="n">write_gds</span><span class="p">(</span><span class="s1">&#39;example.gds&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>首先 <code class="docutils literal notranslate"><span class="pre">path</span> <span class="pre">=</span> <span class="pre">Paths()</span></code> 用于类的初始化,</p>
+<p>此外, Waveguide类还提供了 <code class="docutils literal notranslate"><span class="pre">generate_pcell()</span></code> 方法, 基于 <code class="docutils literal notranslate"><span class="pre">polygons</span></code> ,  <code class="docutils literal notranslate"><span class="pre">layers</span></code> 和 <code class="docutils literal notranslate"><span class="pre">datatypes</span></code> 三个列表,
+通过调用 <code class="docutils literal notranslate"><span class="pre">gdstk.Polygon</span></code> 生成结构, 并放置于 <code class="docutils literal notranslate"><span class="pre">gdstk.Cell</span></code> 之上, 从而返回 PCell, 用于更高层次 Device 对象的构建.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>在上述例子中，我们首先初始化了 Waveguide 类，起始点为 [0, 0]，而宽度为 [2.4, 0.5]。
-事实上，能够给宽度一个list，是 gdstk 相较于 gdspy 新增的 feature，
-即可以通过给宽度一个 list，从而直接得到多条路径重合的 Path，十分适合于与 Waveguide 重合的 heater 构建。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Waveguide</span></code> 中 <code class="docutils literal notranslate"><span class="pre">turn</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">turn</span></code> 方法, 由于 gdstk 包的bug, 是基于 <code class="docutils literal notranslate"><span class="pre">gdstk.ellipse</span></code> 实现的,
+待 gdstk 中 bug 修复后该方法的实现会同步修改. 同理,  gdstk 包中 <code class="docutils literal notranslate"><span class="pre">gdstk.FlexPath.parametric</span></code> 也存在类似 bug,
+为了保证不同波导段能够完美连接,  <code class="docutils literal notranslate"><span class="pre">spline</span></code> 方法在欧拉曲线的头和尾增加了 1 um 的缓冲区, 即与头尾斜率一致的直线段,
+因此, 当前版本如果使用 <code class="docutils literal notranslate"><span class="pre">spline</span></code> 方法构建波导, 不建议收尾曲率非 0.</p>
 </div>
-<p>上述代码所得 gds 文件，其中图形如下图：</p>
+<p>下面列举一个使用 Waveguide 类的例子</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在上述例子中, 我们首先初始化了 Waveguide 类, 起始点为 [0, 0], 而宽度为 [2.4, 0.5].
+事实上, 能够给宽度一个list, 是 gdstk 相较于 gdspy 新增的 feature,
+即可以通过给宽度一个 list, 从而直接得到多条路径重合的 Path, 十分适合于与 Waveguide 重合的 heater 构建.</p>
+</div>
+<p>上述代码所得 gds 文件, 其中图形如下图：</p>
 <a class="reference internal image-reference" href="_images/1.png"><img alt="alternate text" class="align-center" src="_images/1.png" style="width: 600px;" /></a>
 <section id="device">
-<h3>Device 类<a class="headerlink" href="#device" title="Permalink to this heading"></a></h3>
-<p>Device 为定义任意器件提供了通用的方法和参数。一个典型例子如下</p>
+<h4>Device 类<a class="headerlink" href="#device" title="Permalink to this heading"></a></h4>
+<p>Device 为定义任意器件提供了通用的方法和参数. 一个典型例子如下</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Devices</span> <span class="kn">import</span> <span class="n">Device</span>
 <span class="kn">import</span> <span class="nn">gdstk</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -202,6 +224,7 @@ Waveguide 类将创建 <code class="docutils literal notranslate"><span class="p
     <span class="n">lib</span><span class="o">.</span><span class="n">write_gds</span><span class="p">(</span><span class="s2">&quot;first.gds&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 </section>

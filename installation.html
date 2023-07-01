@@ -97,9 +97,8 @@
 Anaconda 将 Python 环境沙盒化，能够同时在一台电脑中创建多个独立的 Python 环境，多个环境可以使用
 不同的 Python 及模块版本而不产生冲突，十分有利于多个基于不同 Python 版本的项目的同时开发。</p>
 <p>在开始菜单中，进入 Anaconda Powershell Prompt (Anaconda3)。
-分别输入以下命令，第一行激活 PyCharm 为我们创建的环境, 第二行添加频道(gdstk等很多第三方开发者的程序包都在此频道内)，随后安装可能需要的模块</p>
+分别输入以下命令，第一行激活 PyCharm 为我们创建的环境，随后安装可能需要的模块</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">GDSLib_gdstk</span>
-<span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">append</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">gdstk</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">numpy</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">scipy</span>
