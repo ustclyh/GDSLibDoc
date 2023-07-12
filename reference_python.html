@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>API Reference &mdash; GDSLib_gdstk 0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,6 +15,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -83,12 +83,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="api-reference">
+  <div class="section" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading"></a></h1>
-<section id="compatibility-adaptation">
+<div class="section" id="compatibility-adaptation">
 <h2>Compatibility adaptation<a class="headerlink" href="#compatibility-adaptation" title="Permalink to this heading"></a></h2>
 <p>这一部分主要完成原有器件库与 <code class="docutils literal notranslate"><span class="pre">gdstk</span></code> 间的兼容性匹配.</p>
-<section id="polygons">
+<div class="section" id="polygons">
 <h3>Polygons<a class="headerlink" href="#polygons" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
@@ -96,8 +96,8 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Polygons 类</p>
 <dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>polygon_list</strong> (<em>list of gdstk.Polygon object</em>) – 存储多边形对象的表.</p>
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>polygon_list</strong> (<em>list</em><em> of </em><em>gdstk.Polygon object</em>) – 存储多边形对象的表.</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -105,7 +105,7 @@
 <span class="sig-name descname"><span class="pre">add_polygon_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Polygon</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>添加已有 gdstk.Polygon 对象。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>obj</strong> (<em>gdstk.Polygon object</em>) – 被添加的 gdstk.Polygon 对象</p>
 </dd>
 </dl>
@@ -116,7 +116,7 @@
 <span class="sig-name descname"><span class="pre">add_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>基于顶点坐标添加 gdstk.Polygon 至 polygon_list。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xy</strong> (<em>array</em><em>[</em><em>N</em><em>]</em><em>[</em><em>2</em><em>] </em><em>like list</em>) – 定义多边形的坐标</p></li>
 <li><p><strong>layer</strong> (<em>int</em>) – 放置该多边形的 layer</p></li>
@@ -127,8 +127,8 @@
 
 </dd></dl>
 
-</section>
-<section id="paths">
+</div>
+<div class="section" id="paths">
 <h3>Paths<a class="headerlink" href="#paths" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
@@ -142,9 +142,9 @@
 从当前 <code class="docutils literal notranslate"><span class="pre">path_list</span></code> 生成Pcell。</p>
 <p>当连续调用  <code class="docutils literal notranslate"><span class="pre">add_*</span></code> 格式的方法时，该类会自动记录路径末端的坐标、斜率以及曲率，用于所添加路径的自动平滑拼接。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>poth_list</strong> (<em>list of gdstk.RobustPath object</em>) – 存储路径对象的表.</p></li>
+<li><p><strong>poth_list</strong> (<em>list</em><em> of </em><em>gdstk.RobustPath object</em>) – 存储路径对象的表.</p></li>
 <li><p><strong>curPath</strong> (<em>gdstk.RobustPath</em>) – 当前正在操纵的路径对象</p></li>
 <li><p><strong>curPosition</strong> (<em>array</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 当前路径末端坐标</p></li>
 <li><p><strong>curWidth</strong> (<em>double</em>) – 当前路径末端宽度</p></li>
@@ -152,7 +152,7 @@
 <li><p><strong>curCurvature</strong> (<em>double</em>) – 当前路径末端曲率</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dt class="field-even">Parameters</dt>
 <dd class="field-even"><p><strong>precision</strong> (<em>double</em>) – 求解精度</p>
 </dd>
 </dl>
@@ -161,13 +161,13 @@
 <span class="sig-name descname"><span class="pre">generate_pcell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>基于当前path_list生成Pcell.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>gdstk.Cell object</p>
 </dd>
 </dl>
@@ -178,13 +178,13 @@
 <span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>开始一段新路径.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>gdstk.Cell object</p>
 </dd>
 </dl>
@@ -201,7 +201,7 @@
 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 的变换将影响此前已加入 <code class="docutils literal notranslate"><span class="pre">self.path_list</span></code> 的对象. 为避免这一情形发生, 请将参数 <code class="docutils literal notranslate"><span class="pre">add_copy</span></code> 设置为真,
 此时方法将生成 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 的拷贝将此加入 <code class="docutils literal notranslate"><span class="pre">self.path_list</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>start</strong> (<em>array</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 新路径起始坐标</p></li>
 <li><p><strong>width</strong> (<em>array</em>) – 路径宽度</p></li>
@@ -219,7 +219,7 @@
 <span class="sig-name descname"><span class="pre">add_segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>为当前路径添加新的segment.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>length</strong> (<em>double</em>) – 长度</p></li>
 <li><p><strong>direction</strong> (<em>double</em>) – 方向</p></li>
@@ -234,7 +234,7 @@
 <span class="sig-name descname"><span class="pre">add_turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>为当前路径添加新的转弯.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> (<em>double</em>) – 半径</p></li>
 <li><p><strong>angle</strong> (<em>double</em>) – 角度</p></li>
@@ -249,7 +249,7 @@
 <span class="sig-name descname"><span class="pre">add_spline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>生成欧拉曲线，曲线起点会自动采用Waveguide的末端点坐标、切向角度以及曲率，末端由ncp给出.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ncp</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>4</em><em>]</em>) – ncp包含定义该曲线的四个参数：dx, dy, 末端角度[rad], 末端曲率.</p></li>
 <li><p><strong>symm</strong> (<em>boolean</em>) – 是否强制曲线关于中心点对称.</p></li>
@@ -260,11 +260,11 @@
 
 </dd></dl>
 
-</section>
-</section>
-<section id="devices">
+</div>
+</div>
+<div class="section" id="devices">
 <h2>Devices<a class="headerlink" href="#devices" title="Permalink to this heading"></a></h2>
-<section id="device">
+<div class="section" id="device">
 <h3>Device<a class="headerlink" href="#device" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
@@ -281,7 +281,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <p>该类还提供了静态方法，用于将由程序包 gdsfactory 生成的 Component 对象直接注册至器件的 PCell 列表，
 用于此程序包与基于 gdsfactory 所定义器件库的兼容性匹配。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – 器件的名称.</p>
 </dd>
 </dl>
@@ -290,7 +290,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_gf_component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>静态方法. 将 gdsfactory 生成的 Component 对象加入Device类的PCell字典. 此静态方法用于 gdsfactory 与此程序包的兼容.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>obj</strong> (<em>gdsfactory.Component</em>) – 被导入的 gdsfactory.Component 对象</p>
 </dd>
 </dl>
@@ -301,7 +301,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write_gds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_to_gds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'debug.gds'</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>静态方法. 将 gdstk.Cell 写入 gds 文件. 此方法会递归地将被索引的全部 gdstk.Cell 对象加入gds library.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cell_to_gds</strong> (<em>gdstk.Cell</em>) – 需导出为 gds 文件的 gdstk.Cell 对象</p></li>
 <li><p><strong>filename</strong> (<em>str</em>) – gds 文件名, 默认为 debug.gds</p></li>
@@ -315,7 +315,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">generate_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>基于当前 Device 中存储的结构，生成 PCell 对象 （gdstk.Cell），将其加入 Device 类的静态属性.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>label</strong> (<em>str</em>) – PCell的名字</p></li>
 <li><p><strong>rotation</strong> (<em>double</em>) – 旋转角度（弧度制）. 如果此属性不为 None, 则会将旋转后 Cell 的副本添加入</p></li>
@@ -335,7 +335,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">add_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>基于顶点坐标添加 gdstk.Polygon 至 polygon_list。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xy</strong> (<em>array</em><em>[</em><em>N</em><em>]</em><em>[</em><em>2</em><em>] </em><em>like list</em>) – 定义多边形的坐标</p></li>
 <li><p><strong>layer</strong> (<em>int</em>) – 放置该多边形的 layer</p></li>
@@ -349,7 +349,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">add_polygon_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Polygon</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>添加已有 gdstk.Polygon 对象。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>obj</strong> (<em>gdstk.Polygon object</em>) – 被添加的 gdstk.Polygon 对象</p>
 </dd>
 </dl>
@@ -360,7 +360,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">add_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>添加已有 gdstk.Polygon 对象。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x_reflection</strong> – </p></li>
 <li><p><strong>rotation</strong> – </p></li>
@@ -376,7 +376,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">add_reference_from_existing_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>添加已有 gdstk.Polygon 对象。</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x_reflection</strong> – </p></li>
 <li><p><strong>rotation</strong> – </p></li>
@@ -392,7 +392,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">add_segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>为当前路径添加新的segment.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>length</strong> (<em>double</em>) – 长度</p></li>
 <li><p><strong>direction</strong> (<em>double</em>) – 方向</p></li>
@@ -407,7 +407,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">add_spline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ncp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>生成欧拉曲线，曲线起点会自动采用Waveguide的末端点坐标、切向角度以及曲率，末端由ncp给出.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ncp</strong> (<em>array-like</em><em>[</em><em>1</em><em>]</em><em>[</em><em>4</em><em>]</em>) – ncp包含定义该曲线的四个参数：dx, dy, 末端角度[rad], 末端曲率.</p></li>
 <li><p><strong>symm</strong> (<em>boolean</em>) – 是否强制曲线关于中心点对称.</p></li>
@@ -421,7 +421,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">add_turn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>为当前路径添加新的转弯.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radius</strong> (<em>double</em>) – 半径</p></li>
 <li><p><strong>angle</strong> (<em>double</em>) – 角度</p></li>
@@ -442,7 +442,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 的变换将影响此前已加入 <code class="docutils literal notranslate"><span class="pre">self.path_list</span></code> 的对象. 为避免这一情形发生, 请将参数 <code class="docutils literal notranslate"><span class="pre">add_copy</span></code> 设置为真,
 此时方法将生成 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 的拷贝将此加入 <code class="docutils literal notranslate"><span class="pre">self.path_list</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>start</strong> (<em>array</em><em>[</em><em>1</em><em>]</em><em>[</em><em>2</em><em>]</em>) – 新路径起始坐标</p></li>
 <li><p><strong>width</strong> (<em>array</em>) – 路径宽度</p></li>
@@ -460,13 +460,13 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">generate_pcell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>基于当前path_list生成Pcell.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>gdstk.Cell object</p>
 </dd>
 </dl>
@@ -477,13 +477,13 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>开始一段新路径.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – PCell的名字.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>pcell</strong> – 包含当前path_list的PCell对象.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>gdstk.Cell object</p>
 </dd>
 </dl>
@@ -491,8 +491,8 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 </dd></dl>
 
-</section>
-<section id="chipconstructors">
+</div>
+<div class="section" id="chipconstructors">
 <h3>ChipConstructors<a class="headerlink" href="#chipconstructors" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
@@ -504,7 +504,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <p><code class="docutils literal notranslate"><span class="pre">CircuitConstructor.cell</span></code> 中仅添加 gdstk.Reference 引用对象 (暂定).</p>
 <p>所有引用均存储于字典 ref_dict 中, 为 DeviceReference 引用对象, 其中包含引用对象本身, 器件的端口坐标和端口序号及名称映射.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>芯片的名称，此名称为放置此芯片 Cell 的名称</em>) – </p></li>
 <li><p><strong>cell</strong> (<em>放置版图的 gdstk.Cell 对象</em>) – </p></li>
@@ -513,11 +513,60 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_box</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>添加芯片外边框, 默认放置于 layer 6, 芯片默认尺寸为 5*5, 请勿轻易更改相关参数</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>添加芯片名称 (字符转多边形) 于芯片顶端, 默认放置于 layer 4, 通过修改 chipName 属性调整所添加字符.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加横向直波导, 用于不同器件间连接, 此方法不得滥用于构造器件.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trans</strong> (<em>[</em><em>x</em><em>, </em><em>y</em><em>]</em>) – 波导起始位置</p></li>
+<li><p><strong>length</strong> (<em>double</em>) – 横向波导长度</p></li>
+<li><p><strong>width</strong> – 波导宽度</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_chip_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.2</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>声明芯片对外耦合端口, 端口声明将用于向外边缘耦合 taper 的自动添加.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_name</strong> (<em>str</em>) – 器件引用名称 (需包含器件名及id)</p></li>
+<li><p><strong>port</strong> (<em>str</em>) – 要申明的端口</p></li>
+<li><p><strong>left</strong> (<em>bool</em>) – 是否为左侧端口, 将决定 taper 的添加方向, 默认为 True</p></li>
+<li><p><strong>width</strong> (<em>double</em>) – 端口处的 bus 波导宽度, 用于 taper 几何结构的自动生成</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">draw_tapers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>根据声明的芯片端口自动绘制用于边缘耦合的 taper.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">add_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>直接添加 PCell 的引用. 参数 <code class="docutils literal notranslate"><span class="pre">obj</span></code> 为特定器件在的注册名称, 参数 <code class="docutils literal notranslate"><span class="pre">id</span></code> 为引用对象的 id, 器件名称与 id 共同构成引用的名称.
 引用可引入平移, 旋转以及对称.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<em>str</em>) – Device 名称, Device 需注册</p></li>
 <li><p><strong>id</strong> (<em>str</em>) – reference 的 id</p></li>
@@ -538,7 +587,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <code class="docutils literal notranslate"><span class="pre">id</span></code> 为引用对象的 id.
 引用可引入旋转以及对称.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>device_name</strong> (<em>str</em>) – Device 名称, Device 需注册</p></li>
 <li><p><strong>id</strong> (<em>str</em>) – reference 的 id</p></li>
@@ -560,7 +609,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <code class="docutils literal notranslate"><span class="pre">id</span></code> 为引用对象的 id.
 引用可引入旋转以及对称.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>device_name</strong> (<em>str</em>) – Device 名称, Device 需注册</p></li>
 <li><p><strong>port</strong> (<em>str</em>) – 关注端口名称</p></li>
@@ -578,7 +627,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <span class="sig-name descname"><span class="pre">write_gds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'debug.gds'</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>生成 gds 文件.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – gds 文件名</p>
 </dd>
 </dl>
@@ -586,9 +635,9 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 </dd></dl>
 
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
 
            </div>
