@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get Started &mdash; GDSLib_gdstk 0.0 documentation</title>
+  <title>第二个例子: MZ 干涉仪 &mdash; GDSLib_gdstk 0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="构建 Device" href="devices.html" />
-    <link rel="prev" title="Installation" href="installation.html" /> 
+    <link rel="next" title="构建 芯片" href="chips.html" />
+    <link rel="prev" title="第一个例子: 波导交叉" href="first_example.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,8 +45,12 @@
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Get Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="devices.html">构建 Device</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gettingstarted.html">Get Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="devices.html">构建 Device</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="first_example.html">第一个例子: 波导交叉</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">第二个例子: MZ 干涉仪</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chips.html">构建 芯片</a></li>
 <li class="toctree-l2"><a class="reference internal" href="heaters.html">添加 Heater</a></li>
 </ul>
@@ -68,7 +72,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Get Started</li>
+          <li class="breadcrumb-item"><a href="gettingstarted.html">Get Started</a></li>
+          <li class="breadcrumb-item"><a href="devices.html">构建 Device</a></li>
+      <li class="breadcrumb-item active">第二个例子: MZ 干涉仪</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,36 +83,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="get-started">
-<h1>Get Started<a class="headerlink" href="#get-started" title="Permalink to this heading"></a></h1>
-<p>程序包包含 ElementStructures, Devices 以及 ChipLayout 三个层级.</p>
-<p>ElementStructures 封装了 gdstk 的三种对象, 即 <code class="docutils literal notranslate"><span class="pre">gdstk.RobustPath</span></code>, <code class="docutils literal notranslate"><span class="pre">gdstk.Polygons</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gdstk.Reference</span></code>.
-ElementStructures中的类  <code class="docutils literal notranslate"><span class="pre">Paths</span></code>, <code class="docutils literal notranslate"><span class="pre">Polygons</span></code> 和 <code class="docutils literal notranslate"><span class="pre">References</span></code> 均包含了存储对应 gdstk 对象的列表.
-此外 <code class="docutils literal notranslate"><span class="pre">Paths</span></code> 可单独使用, 用于生成简单结构, 方便基于 FDTD 的仿真.</p>
-<p>Devices 提供了构造器件的方法, 它是  <code class="docutils literal notranslate"><span class="pre">gdstk.RobustPath</span></code>, <code class="docutils literal notranslate"><span class="pre">gdstk.Polygons</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gdstk.Reference</span></code> 的子类, 继承了一切属性和方法.
-Devices 提供的方法 <code class="docutils literal notranslate"><span class="pre">generate_cell</span></code> 将自动融合其三个父类提供的列表, 将全部对象放置于一个 PCell 内, 并将此 PCell 注册于一可以随时调用的字典, 方便后续的芯片级操作.</p>
-<p>ChipLayout 提供了多种生成 Devices 引用的方法, Devices 间自动连线的方法, 以及 heater 的绘制功能.
-最后能够完成芯片的最终 gds 导出.</p>
-<p>下面将介绍从器件出发构建芯片 Layout 的方法.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="devices.html">构建 Device</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="first_example.html">第一个例子: 波导交叉</a></li>
-<li class="toctree-l2"><a class="reference internal" href="second_example.html">第二个例子: MZ 干涉仪</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="chips.html">构建 芯片</a></li>
-<li class="toctree-l1"><a class="reference internal" href="heaters.html">添加 Heater</a></li>
-</ul>
-</div>
+  <div class="section" id="mz">
+<h1>第二个例子: MZ 干涉仪<a class="headerlink" href="#mz" title="Permalink to this heading"></a></h1>
 </div>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="devices.html" class="btn btn-neutral float-right" title="构建 Device" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="first_example.html" class="btn btn-neutral float-left" title="第一个例子: 波导交叉" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chips.html" class="btn btn-neutral float-right" title="构建 芯片" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

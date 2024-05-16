@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Get Started" href="gettingstarted.html" /> 
+    <link rel="prev" title="添加 Heater" href="heaters.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,7 +53,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#devices">Devices</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#device">Device</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#chipconstructors">ChipConstructors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chiplayout">ChipLayout</a></li>
 </ul>
 </li>
 </ul>
@@ -132,7 +132,7 @@
 <h3>Paths<a class="headerlink" href="#paths" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">Paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ElementStructures.</span></span><span class="sig-name descname"><span class="pre">Paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Paths 类</p>
 <p>该类用于构建由多边形定义的路径。其方法分为两大类：路径初始化和结束；路径的绘制。</p>
@@ -175,7 +175,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
+<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>开始一段新路径.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -192,7 +192,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">end_current_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<span class="sig-name descname"><span class="pre">end_current_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>将当前路径添加入path_list, 并结束当前路径, 并根据情况开始一段新路径.</p>
 <p>当start参数非空时, 会开始一段新路径. 当参数 <code class="docutils literal notranslate"><span class="pre">start</span></code>
 为空, 且 <code class="docutils literal notranslate"><span class="pre">auto_new</span></code> 为假时, 此方法仅将当前路径对象加入 <code class="docutils literal notranslate"><span class="pre">self.path_list</span></code>, 但不会刷新 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code>. 此时用户可以调用
@@ -268,21 +268,28 @@
 <h3>Device<a class="headerlink" href="#device" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Devices.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Devices.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Device'</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Paths</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Polygons</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">References</span></code></p>
 <p>Device 类</p>
-<p>该类应当是 Devices 中所有器件的父类， Device 提供了器件构建的通用方法。
-此外，在一次芯片构建过程中，所需所有的PCell的实例，均需以字典的形式存储于类的静态属性 devList 中，相应的
-端口信息，以字典的形式存储于静态属性 devDict 中。</p>
-<p>此类继承了 Paths 和 Polygons，因此其中包含存储器件所包含路径以及多边形的列表。此外，此类还添加了
-与端口相关的属性，用于系统级的芯片构建。</p>
-<p>当器件几何结构定义完成后，即可调用 generate_cell 方法，基于当前几何结构生成 PCell ，并将此 PCell 注册。
-generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
+<p>该类应当是 Devices 中所有器件的父类， Device 提供了器件构建的通用方法。</p>
+<p>在一次芯片构建过程中，在程序的第一部分，需初始化所需全部 Device （器件）。
+当 Device 类中全部参数确定为所需后，调用 generate_cell 方法，程序会基于当前参数生成放置该期间的 Cell ，
+并自动计算 md5 值用于器件命名。
+所有所需器件，一旦调用 generate_cell 方法，便被加入静态字典 devList 中，键值为自动生成的器件名。
+generate_cell 方法会返回自动生成的器件的 Cell，可通过 Cell.name 获取生成器件的名称，用于芯片构建过程中的进一步调用。
+器件的端口信息，以字典的形式存储于静态属性 devDict 中。</p>
+<p>此类继承了 Paths 和 Polygons，因此其中包含存储器件所包含路径以及多边形的列表。
+此外，此类还添加了与端口相关的属性，用于系统级的芯片构建。</p>
+<p>此类还与 heater 绘制相关，有两种策略：
+一、请在器件定义（即自定义 Device 类的子类）时，添加 heater_box 属性，并以 [array([x1, y1]), array([x2, y2])] 的格式存入
+box 的左下和右上坐标，HeaterGenerator 会基于此绘制 heater。
+二、如已定义非标准 heater （比如环腔），请将 heater 的两个用于连接的 Pad 坐标以 [array([x1, y1]), array([x2, y2])] 格式
+存入自行添加的属性 heaterPad。</p>
 <p>该类还提供了静态方法，用于将由程序包 gdsfactory 生成的 Component 对象直接注册至器件的 PCell 列表，
 用于此程序包与基于 gdsfactory 所定义器件库的兼容性匹配。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – 器件的名称.</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – 器件的名称，此名称会以 Label 的形式出现于 GDS 版图，并作为 heater 绘制的标识符，在 Chip 构建时请务必给定独特的名称。</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -312,16 +319,51 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">generate_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>基于当前 Device 中存储的结构，生成 PCell 对象 （gdstk.Cell），将其加入 Device 类的静态属性.</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write_gds_for_fdtd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_to_gds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'debug.gds'</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>静态方法. 将 gdstk.Cell 写入 gds 文件用于 FDTD 仿真. 此方法会根据器件的端口信息, 自动延伸等宽波导, 方便端口和仿真区加入.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_to_gds</strong> (<em>gdstk.Cell</em>) – 需导出为 gds 文件的 gdstk.Cell 对象</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – gds 文件名, 默认为 debug.gds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">show_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>静态方法. 在 KLayout 中显示器件的 preview.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clear_all</strong> (<em>bool</em>) – 初始化器件</p></li>
+<li><p><strong>device</strong> (<em>Device</em>) – 需要在 KLayout 中显示的器件</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">generate_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>基于当前 Device 的类参数，生成 PCell 对象 （gdstk.Cell），将其加入 Device 字典，用于进一步 Chip 构建。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clear_all</strong> (<em>bool</em>) – 是否清除当前 PCell</p></li>
 <li><p><strong>label</strong> (<em>str</em>) – PCell的名字</p></li>
 <li><p><strong>rotation</strong> (<em>double</em>) – 旋转角度（弧度制）. 如果此属性不为 None, 则会将旋转后 Cell 的副本添加入</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>基于当前类参数绘制器件，此方法需要被重载，根据需求放置实际器件绘制代码。</p>
 </dd></dl>
 
 <dl class="py method">
@@ -358,6 +400,22 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">add_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加已有 gdstk.Polygon 对象。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_reflection</strong> – </p></li>
+<li><p><strong>rotation</strong> – </p></li>
+<li><p><strong>origin</strong> – </p></li>
+<li><p><strong>obj</strong> (<em>gdstk.Polygon object</em>) – 被添加的 gdstk.Polygon 对象</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_reference_by_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port_xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>添加已有 gdstk.Polygon 对象。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -433,7 +491,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">end_current_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<span class="sig-name descname"><span class="pre">end_current_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>将当前路径添加入path_list, 并结束当前路径, 并根据情况开始一段新路径.</p>
 <p>当start参数非空时, 会开始一段新路径. 当参数 <code class="docutils literal notranslate"><span class="pre">start</span></code>
 为空, 且 <code class="docutils literal notranslate"><span class="pre">auto_new</span></code> 为假时, 此方法仅将当前路径对象加入 <code class="docutils literal notranslate"><span class="pre">self.path_list</span></code>, 但不会刷新 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code>. 此时用户可以调用
@@ -474,7 +532,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
+<span class="sig-name descname"><span class="pre">new_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50000</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>开始一段新路径.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -492,16 +550,15 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 </dd></dl>
 
 </div>
-<div class="section" id="chipconstructors">
-<h3>ChipConstructors<a class="headerlink" href="#chipconstructors" title="Permalink to this heading"></a></h3>
+<div class="section" id="chiplayout">
+<h3>ChipLayout<a class="headerlink" href="#chiplayout" title="Permalink to this heading"></a></h3>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ChipConstructors.</span></span><span class="sig-name descname"><span class="pre">CircuitConstructor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MAIN'</span></span></em><span class="sig-paren">)</span></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ChipConstructors.ChipLayout.</span></span><span class="sig-name descname"><span class="pre">ChipLayout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MAIN'</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>CircuitConstructor 类</p>
+<p>ChipLayout 类</p>
 <p>基于此类可生成 photonic chip, chip默认尺寸为 5 mm * 5 mm. 此类提供了若干放置已注册 Device 的方法,
 以及自动递归写入 gds 文件的方法。</p>
-<p><code class="docutils literal notranslate"><span class="pre">CircuitConstructor.cell</span></code> 中仅添加 gdstk.Reference 引用对象 (暂定).</p>
 <p>所有引用均存储于字典 ref_dict 中, 为 DeviceReference 引用对象, 其中包含引用对象本身, 器件的端口坐标和端口序号及名称映射.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -519,14 +576,23 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>添加芯片名称 (字符转多边形) 于芯片顶端, 默认放置于 layer 4, 通过修改 chipName 属性调整所添加字符.</p>
+<span class="sig-name descname"><span class="pre">add_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加芯片名称 (字符转多边形) 于芯片顶端, 默认放置于 layer 2, 通过修改 chipName 属性调整所添加字符.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>待放置字符</em>) – </p></li>
+<li><p><strong>size</strong> (<em>字符尺寸，默认20</em>) – </p></li>
+<li><p><strong>xy</strong> (<em>字符放置的坐标，默认为 None</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>添加横向直波导, 用于不同器件间连接, 此方法不得滥用于构造器件.</p>
+<span class="sig-name descname"><span class="pre">add_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加横向直波导, 用于不同器件间连接, 此方法不得滥用于构造器件. 此方法不推荐使用, 基于兼容性考量保留.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -540,15 +606,14 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_chip_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.2</span></span></em><span class="sig-paren">)</span></dt>
+<span class="sig-name descname"><span class="pre">add_chip_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taper_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>声明芯片对外耦合端口, 端口声明将用于向外边缘耦合 taper 的自动添加.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref_name</strong> (<em>str</em>) – 器件引用名称 (需包含器件名及id)</p></li>
 <li><p><strong>port</strong> (<em>str</em>) – 要申明的端口</p></li>
-<li><p><strong>left</strong> (<em>bool</em>) – 是否为左侧端口, 将决定 taper 的添加方向, 默认为 True</p></li>
-<li><p><strong>width</strong> (<em>double</em>) – 端口处的 bus 波导宽度, 用于 taper 几何结构的自动生成</p></li>
+<li><p><strong>taper_width</strong> (<em>double</em>) – 声明端口的taper宽度, 具有最高优先级</p></li>
 </ul>
 </dd>
 </dl>
@@ -556,15 +621,26 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">draw_tapers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<span class="sig-name descname"><span class="pre">draw_tapers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">taper_end_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taper_end_width_r</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taper_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>根据声明的芯片端口自动绘制用于边缘耦合的 taper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>taper_end_width</strong> (<em>taper末端宽度，默认 0.3，可被 add_chip_port 中给定的taper宽度覆盖</em>) – </p></li>
+<li><p><strong>taper_end_width_r</strong> (<em>右侧taper末端宽度，如给定则覆盖 taper_end_width，优先级低于 add_chip_port 中给定的taper宽度。</em>) – </p></li>
+<li><p><strong>taper_length</strong> (<em>taper 的长度，默认值250微米，不建议修改。</em>) – </p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>直接添加 PCell 的引用. 参数 <code class="docutils literal notranslate"><span class="pre">obj</span></code> 为特定器件在的注册名称, 参数 <code class="docutils literal notranslate"><span class="pre">id</span></code> 为引用对象的 id, 器件名称与 id 共同构成引用的名称.
-引用可引入平移, 旋转以及对称.</p>
+<span class="sig-name descname"><span class="pre">add_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trans</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heater</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>直接添加 PCell 的引用。 参数 <code class="docutils literal notranslate"><span class="pre">obj</span></code> 为特定器件的注册名称（默认在 generate_cell 时自动根据类的 md5 值生成），
+参数 <code class="docutils literal notranslate"><span class="pre">id</span></code> 为引用对象的 id，用于区分对于同一器件的不同引用。器件名称与 id 共同构成引用的名称。
+引用名称（即 id ）的唯一性非常重要，器件名称（即实例化器件时给定的名称）+ id共同构成于GDS版图显示的器件Label，并用作heater绘制的标识符。
+引用可引入平移，旋转以及对称。</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -573,6 +649,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <li><p><strong>trans</strong> – 位移</p></li>
 <li><p><strong>rotation</strong> (<em>double</em>) – 旋转角度（弧度制）, 默认为 0</p></li>
 <li><p><strong>x_reflection</strong> (<em>bool</em>) – 是否对于 x 轴对称, 默认为否</p></li>
+<li><p><strong>heater</strong> (<em>bool</em>) – 是否需要heater</p></li>
 </ul>
 </dd>
 </dl>
@@ -580,8 +657,8 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_reference_by_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>基于端口添加 PCell 的引用. 参数 <code class="docutils literal notranslate"><span class="pre">device_name</span></code> 为特定器件在的注册名称,
+<span class="sig-name descname"><span class="pre">add_reference_by_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heater</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>基于端口添加 PCell 的引用，注意事项同 <code class="docutils literal notranslate"><span class="pre">add_reference</span></code> 。
 <code class="docutils literal notranslate"><span class="pre">port</span></code> 为关注端口名称,
 <code class="docutils literal notranslate"><span class="pre">origin</span></code> 为关注端口的放置坐标,
 <code class="docutils literal notranslate"><span class="pre">id</span></code> 为引用对象的 id.
@@ -595,6 +672,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <li><p><strong>origin</strong> – 关注端口的对齐坐标 (即器件放置后, 所关注端口坐标为指定值)</p></li>
 <li><p><strong>rotation</strong> (<em>double</em>) – 旋转角度（弧度制）, 默认为 0</p></li>
 <li><p><strong>x_reflection</strong> (<em>bool</em>) – 是否对于 x 轴对称, 默认为否</p></li>
+<li><p><strong>heater</strong> (<em>bool</em>) – 是否需要heater</p></li>
 </ul>
 </dd>
 </dl>
@@ -602,8 +680,8 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">add_by_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_ref_and_port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>基于端口连接添加 PCell 的引用. 参数 <code class="docutils literal notranslate"><span class="pre">device_name</span></code> 为特定器件在的注册名称,
+<span class="sig-name descname"><span class="pre">add_port_to_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_ref_and_port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_reflection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heater</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>基于端口连接添加 PCell 的引用，注意事项同 <code class="docutils literal notranslate"><span class="pre">add_reference</span></code> 。
 <code class="docutils literal notranslate"><span class="pre">port</span></code> 为关注端口名称,
 <code class="docutils literal notranslate"><span class="pre">existing_ref_and_port</span></code> 为已被放置的被连接器件及端口定义,
 <code class="docutils literal notranslate"><span class="pre">id</span></code> 为引用对象的 id.
@@ -617,9 +695,102 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
 <li><p><strong>id</strong> (<em>str</em>) – reference 的 id</p></li>
 <li><p><strong>rotation</strong> (<em>double</em>) – 旋转角度（弧度制）, 默认为 0</p></li>
 <li><p><strong>x_reflection</strong> (<em>bool</em>) – 是否对于 x 轴对称, 默认为否</p></li>
+<li><p><strong>heater</strong> (<em>bool</em>) – 是否需要heater</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">far_connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port2</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>器件端口标准连接，将ref1的port1经直线，弯曲，直线连接至ref2的port2。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref1</strong> (<em>str</em>) – 器件1的引用名</p></li>
+<li><p><strong>port1</strong> (<em>str</em>) – 器件1的待连接端口名</p></li>
+<li><p><strong>ref2</strong> (<em>str</em>) – 器件2的引用名</p></li>
+<li><p><strong>port2</strong> (<em>str</em>) – 器件2的待连接端口名</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">mod_ref_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>器件端口修改，将ref的port按照cmd延伸，并自动更新端口坐标</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>str</em>) – 器件引用名</p></li>
+<li><p><strong>port</strong> (<em>str</em>) – 器件的端口名</p></li>
+<li><p><strong>cmd</strong> (<em>[</em><em>array</em><em>(</em><em>[</em><em>4</em><em>, </em><em>1</em><em>]</em><em>)</em><em>]</em>) – list of [dx, dy, end_angle, end_curvature]，将自动调用 Path.add_spline() 完成路径生成。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_taper_to_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>为器件端口添加taper，用于波导宽度匹配，并自动更新端口坐标</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>str</em>) – 器件引用名</p></li>
+<li><p><strong>port</strong> (<em>str</em>) – 器件的端口名</p></li>
+<li><p><strong>width</strong> (<em>double</em>) – taper 末端宽度</p></li>
+<li><p><strong>L</strong> (<em>double</em>) – taper的长度。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_taper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加taper，返回末端坐标</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xy</strong> (<em>[</em><em>double</em><em>, </em><em>double</em><em>]</em>) – 起始坐标</p></li>
+<li><p><strong>width1</strong> (<em>double</em>) – 起始宽度</p></li>
+<li><p><strong>width2</strong> (<em>double</em>) – 末端宽度</p></li>
+<li><p><strong>dir</strong> (<em>double</em>) – 方向</p></li>
+<li><p><strong>L</strong> (<em>double</em>) – taper的长度。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">add_wg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>添加波导，返回末端坐标
+:param start: 起始坐标
+:type start: [double, double]
+:param width: 波导宽度
+:type width: double
+:param dir: 起始方向
+:type dir: double
+:param cmd: list of [dx, dy, end_angle, end_curvature]，将自动调用 Path.add_spline() 完成路径生成。
+:type cmd: [array([4, 1])]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">direct_connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port2</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>器件端口直接相连，将ref1的port1经 Path.add_spline() 连接至ref2的port2
+:param ref1: 器件1的引用名
+:type ref1: str
+:param port1: 器件1的待连接端口名
+:type port1: str
+:param ref2: 器件2的引用名
+:type ref2: str
+:param port2: 器件2的待连接端口名
+:type port2: str</p>
 </dd></dl>
 
 <dl class="py method">
@@ -643,7 +814,7 @@ generate_cell 方法将自动合并 path_list 和 polygon_list。</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="gettingstarted.html" class="btn btn-neutral float-left" title="Get Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="heaters.html" class="btn btn-neutral float-left" title="添加 Heater" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>第一个例子: 波导交叉 &mdash; GDSLib_gdstk 0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="第二个例子: MZ 干涉仪" href="second_example.html" />
+    <link rel="prev" title="构建 Device" href="devices.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GDSLib_gdstk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gettingstarted.html">Get Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="devices.html">构建 Device</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">第一个例子: 波导交叉</a></li>
+<li class="toctree-l3"><a class="reference internal" href="second_example.html">第二个例子: MZ 干涉仪</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chips.html">构建 芯片</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heaters.html">添加 Heater</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference_python.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GDSLib_gdstk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="gettingstarted.html">Get Started</a></li>
+          <li class="breadcrumb-item"><a href="devices.html">构建 Device</a></li>
+      <li class="breadcrumb-item active">第一个例子: 波导交叉</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="id1">
+<h1>第一个例子: 波导交叉<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h1>
+<p>此例子生成如图所示的波导交叉, 其包含四个 port.</p>
+<a class="reference internal image-reference" href="_images/device1.png"><img alt="alternate text" class="align-center" src="_images/device1.png" style="width: 600px;" /></a>
+<p>整体而言, 构建 Device 需要根据器件构建参数, 声明类的属性.
+下列代码中 <code class="docutils literal notranslate"><span class="pre">__init__</span></code> 函数即完成此功能, 其中 <code class="docutils literal notranslate"><span class="pre">super().__init__(name)</span></code> 完成父类的初始化,
+其余 <code class="docutils literal notranslate"><span class="pre">self.xxx</span> <span class="pre">=</span> <span class="pre">xxx</span></code> 格式的语句即为类属性的声明.</p>
+<p>此外, 类定义需要重载 <code class="docutils literal notranslate"><span class="pre">self.draw()</span></code> 方法, 此方法给出绘制器件的过程.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">Devices</span> <span class="kn">import</span> <span class="n">Device</span>
+<span class="kn">import</span> <span class="nn">gdstk</span>
+
+<span class="k">class</span> <span class="nc">Cross45</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w1</span> <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># ring-bus gap [um]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w2</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># ring waveguide width [um]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L1</span> <span class="o">=</span> <span class="mf">33.3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L2</span> <span class="o">=</span> <span class="mf">5.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="mi">250</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rect</span> <span class="o">=</span> <span class="n">gdstk</span><span class="o">.</span><span class="n">rectangle</span><span class="p">((</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">w1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">core</span> <span class="o">=</span> <span class="n">gdstk</span><span class="o">.</span><span class="n">boolean</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">rect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;or&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_polygon_obj</span><span class="p">(</span><span class="n">core</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">w1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L2</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+        <span class="n">curDy</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">([</span><span class="n">curDy</span><span class="p">,</span> <span class="n">curDy</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curAngle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">((</span><span class="mi">75</span><span class="o">-</span><span class="n">curDy</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">175</span><span class="p">,</span> <span class="o">-</span><span class="mi">125</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">175</span><span class="p">,</span> <span class="o">+</span><span class="mi">125</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">+</span><span class="mi">175</span><span class="p">,</span> <span class="o">-</span><span class="mi">125</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">+</span><span class="mi">175</span><span class="p">,</span> <span class="o">+</span><span class="mi">125</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>接下来, 我们详细针对 <code class="docutils literal notranslate"><span class="pre">draw()</span></code> 方法以 “代码段 - 说明” 的形式给出说明.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rect</span> <span class="o">=</span> <span class="n">gdstk</span><span class="o">.</span><span class="n">rectangle</span><span class="p">((</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">w1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">core</span> <span class="o">=</span> <span class="n">gdstk</span><span class="o">.</span><span class="n">boolean</span><span class="p">(</span><span class="n">rect</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">rect</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;or&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_polygon_obj</span><span class="p">(</span><span class="n">core</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>上述三行代码用于形成十字结构, 如图所示.</p>
+<a class="reference internal image-reference" href="_images/device2.png"><img alt="alternate text" class="align-left" src="_images/device2.png" style="width: 200px;" /></a>
+<p>第一行调用 <code class="docutils literal notranslate"><span class="pre">gdstk.rectangle</span></code> 方法, 生成矩形对象,
+第一个参数为矩形左下角坐标, 第二个参数为矩形右上角坐标.</p>
+<p>第二行是将第一行所得到矩形, 与其旋转 90 度后的结果进行 “或” 操作, 放置于层 1.
+需要注意, <code class="docutils literal notranslate"><span class="pre">rect</span></code> 为对象的引用, 因此对其操作将影响所有 <code class="docutils literal notranslate"><span class="pre">rect</span></code> 对像, 因此布尔操作是对其副本 <code class="docutils literal notranslate"><span class="pre">rect.copy()</span></code> 和
+变换后的结果 <code class="docutils literal notranslate"><span class="pre">rect.rotate(np.pi</span> <span class="pre">/</span> <span class="pre">2)</span></code> 进行运算.</p>
+<p>第三行将第二行得到的十字, 进行 45 度转动后, 通过 <code class="docutils literal notranslate"><span class="pre">add_polygon_obj()</span></code> 方法, 加入 Device 类的多边形列表.
+需要注意, <code class="docutils literal notranslate"><span class="pre">gdstk.boolean</span></code> 返回的是 <code class="docutils literal notranslate"><span class="pre">gdstk.Polygon</span></code> 类的列表, 但由于此结构极为简单, 列表中仅有一个元素,
+因此只需将索引为 0 的对象加入多边形列表即可.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">w1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L2</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>上述代码用于 cross 器件到波导端口的 taper 连接, 效果如图.</p>
+<a class="reference internal image-reference" href="_images/device3.png"><img alt="alternate text" class="align-left" src="_images/device3.png" style="width: 200px;" /></a>
+<p>下面详细阐述其实现方法. 首先调用 <code class="docutils literal notranslate"><span class="pre">new_path</span></code> 方法初始化一条路径, 第一个参数为路径起始坐标, 第二个参数为路径宽度,
+第三个参数为放置结构的层. 此方法会为 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 初始化一个 <code class="docutils literal notranslate"><span class="pre">gdstk.RobustPath</span></code> 对象.</p>
+<p>随后, 调用 <code class="docutils literal notranslate"><span class="pre">add_segment</span></code> 方法添加一个直线段, 长度为 <code class="docutils literal notranslate"><span class="pre">self.L2</span></code>, 末端宽度 <code class="docutils literal notranslate"><span class="pre">self.w2</span></code>.
+第二个参数为可选参数, 若为空则路径宽度不变.
+此时, 所得路径如图中蓝框内结构所示, 显然并非我们想要.
+因此, 我们通过 <code class="docutils literal notranslate"><span class="pre">self.curPath.rotate</span></code> 直接操纵 <code class="docutils literal notranslate"><span class="pre">gdstk.RobustPath</span></code> 对象, 通过 gdstk 提供的旋转方法,
+将其转动45度, 与波导交叉末端接在一起.</p>
+<p>成型的基本结构, 若想能够成为器件的一部分, 同多边形一样, 需要加入类的路径列表, 这件事情通过 <code class="docutils literal notranslate"><span class="pre">end_current_path</span></code> 实现.
+这里, 我们加入的路径为 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 的一个副本, 即 <code class="docutils literal notranslate"><span class="pre">self.curPath.copy()</span></code>, 为了做到这一点,
+只需在调用方法 <code class="docutils literal notranslate"><span class="pre">end_current_path</span></code> 将参数 <code class="docutils literal notranslate"><span class="pre">add_copy</span></code> 给成 True 即可.</p>
+<p>波导交叉具有四个端口, 因此我们需要加入四个 taper.
+仅需反复调用 <code class="docutils literal notranslate"><span class="pre">self.curPath.rotate(np.pi</span> <span class="pre">/</span> <span class="pre">2)</span></code> 将其旋转, 以及 <code class="docutils literal notranslate"><span class="pre">self.end_current_path(add_copy=True)</span></code> 便可逐步加入四段 taper.
+由于我们始终令 <code class="docutils literal notranslate"><span class="pre">add_copy=True</span></code>, 因此后续对 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 不会影响已经加入路径列表的路径对象.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">curDy</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L1</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">([</span><span class="n">curDy</span><span class="p">,</span> <span class="n">curDy</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curAngle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">((</span><span class="mi">75</span><span class="o">-</span><span class="n">curDy</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>上述代码用于后续到 port 的波导连接, 已经和最终效果一致, 效果如图.
+其思路同前类似, 先画出一条波导, 随后通过三次旋转结合镜像操作, 得到最终结构.</p>
+<a class="reference internal image-reference" href="_images/device4.png"><img alt="alternate text" class="align-left" src="_images/device4.png" style="width: 300px;" /></a>
+<p>其中有几点需要说明: 1. <code class="docutils literal notranslate"><span class="pre">self.curAngle</span></code> 记录了当前 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 末端角度, 可以通过改变此属性, 直接调节下一条绘制路径的起始斜率;
+2. <code class="docutils literal notranslate"><span class="pre">self.add_spine()</span></code> 方法用于连续曲率曲线的生成, 它仅包含一个参数, 为一个包含四个实数的列表.</p>
+<p>下面详细说明 <code class="docutils literal notranslate"><span class="pre">add_spine()</span></code> 方法. 该方法接收参数为 [dx, dy, Af, Cf], 它自动获取起始点的角度 <code class="docutils literal notranslate"><span class="pre">self.curAngle</span></code> 和曲率 <code class="docutils literal notranslate"><span class="pre">self.curCurvature</span></code>,
+相对于当前起始点, 生成一条 [dx, dy] 的相对坐标增量曲线, 曲线末端的角度 Af 和曲率 Cf 为用户给定.
+此曲线上, 切线方向和曲率满足连续变化.
+能够提供较低的波导弯曲损耗.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">175</span><span class="p">,</span> <span class="o">-</span><span class="mi">125</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">175</span><span class="p">,</span> <span class="o">+</span><span class="mi">125</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">+</span><span class="mi">175</span><span class="p">,</span> <span class="o">-</span><span class="mi">125</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">+</span><span class="mi">175</span><span class="p">,</span> <span class="o">+</span><span class="mi">125</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>代码的最后一部分用于声明器件的端口, 对于 Chip 构建具有重要作用.
+端口声明通过 <code class="docutils literal notranslate"><span class="pre">add_port</span></code> 方法完成, 其第一个参数为用户自定义名称, 第二个参数为端口坐标,
+第三个参数为端口外法线角度, 第四个参数为端口处波导宽度.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="devices.html" class="btn btn-neutral float-left" title="构建 Device" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="second_example.html" class="btn btn-neutral float-right" title="第二个例子: MZ 干涉仪" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Yihan Luo.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
