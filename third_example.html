@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>其它功能: 预览和仿真 &mdash; GDSLib_gdstk 0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="构建 芯片" href="chips.html" />
+    <link rel="prev" title="第二个例子: UMZI" href="second_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            GDSLib_gdstk
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gettingstarted.html">Get Started</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="devices.html">构建 Device</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="first_example.html">第一个例子: 波导交叉</a></li>
+<li class="toctree-l3"><a class="reference internal" href="second_example.html">第二个例子: UMZI</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">其它功能: 预览和仿真</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">器件预览</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">器件仿真</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chips.html">构建 芯片</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heaters.html">添加 Heater</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference_python.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">GDSLib_gdstk</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="gettingstarted.html">Get Started</a></li>
+          <li class="breadcrumb-item"><a href="devices.html">构建 Device</a></li>
+      <li class="breadcrumb-item active">其它功能: 预览和仿真</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="id1">
+<h1>其它功能: 预览和仿真<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h1>
+<div class="section" id="id2">
+<h2>器件预览<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<p>Device 类还提供了静态方法用于器件预览, 需要于 KLayout 安装插件 klive.
+预览代码示例如下</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Devices</span> <span class="kn">import</span> <span class="n">Device</span>
+
+<span class="k">class</span> <span class="nc">PreDev</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">PreDev</span><span class="p">(</span><span class="s1">&#39;Test&#39;</span><span class="p">)</span>
+    <span class="n">Device</span><span class="o">.</span><span class="n">show_device</span><span class="p">(</span><span class="n">cs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>下面给予简要说明.</p>
+<p>上述代码段完成了器件的最基本配置, 包括一条波导的绘制以及端口定义.
+器件 PreDev 定义完成后, 仅需建立该器件的对象, 随后将此对象作为参数输入函数 <code class="docutils literal notranslate"><span class="pre">Device.show_device()</span></code>, 运行即可在 KLayout 完成预览.
+如下图</p>
+<a class="reference internal image-reference" href="_images/preview.png"><img alt="alternate text" class="align-center" src="_images/preview.png" style="width: 700px;" /></a>
+<p>图中红框中的绿色 klive 标记, 为 KLayout 配置成功的标记.</p>
+</div>
+<div class="section" id="id3">
+<h2>器件仿真<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<p>器件库还提供了器件仿真的支持, 以 PreDev 为例, 介绍使用方法.
+在以上定义基础上, 通过以下代码调用即可.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Devices</span> <span class="kn">import</span> <span class="n">FDTDSimulator</span>
+
+<span class="n">pd</span> <span class="o">=</span> <span class="n">PreDev</span><span class="p">(</span><span class="s1">&#39;PD&#39;</span><span class="p">)</span>
+<span class="n">simu</span> <span class="o">=</span> <span class="n">FDTDSimulator</span><span class="p">(</span><span class="n">pd</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                     <span class="n">wg_height</span><span class="o">=</span><span class="mf">800e-9</span><span class="p">,</span>
+                     <span class="n">wavelength_start</span><span class="o">=</span><span class="mf">1.540e-6</span><span class="p">,</span>
+                     <span class="n">wavelength_stop</span><span class="o">=</span><span class="mf">1.560e-6</span><span class="p">,</span>
+                     <span class="n">wavelength_number</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+                     <span class="n">top_clad</span><span class="o">=</span><span class="mf">1.5e-6</span><span class="p">,</span>
+                     <span class="n">bottom_clad</span><span class="o">=</span><span class="mf">1.5e-6</span><span class="p">,</span>
+                     <span class="n">side_clad</span><span class="o">=</span><span class="mf">2e-6</span><span class="p">,</span>
+                     <span class="n">port_clad</span><span class="o">=</span><span class="mf">2e-6</span><span class="p">,</span>
+                     <span class="n">gpu</span><span class="o">=</span><span class="kc">True</span>
+                     <span class="p">)</span>
+
+<span class="n">simu</span><span class="o">.</span><span class="n">fdtd_model_establish</span><span class="p">(</span><span class="n">run</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>首先生成待仿真器件的对象, 随后初始化 Simulator 对象, 第一个参数即待仿真器件.
+第二个参数为光源输入端口, 默认为 TE00 模式输入.
+后续参数与仿真模型建立有关, 其中 XXX_clad 为波导器件距离 FDTD 仿真区域几个边界的距离.
+参数 gpu 为是否调用 GPU 进行仿真, 模型不能太大, 否则会爆显存.</p>
+<a class="reference internal image-reference" href="_images/simu.png"><img alt="alternate text" class="align-center" src="_images/simu.png" style="width: 600px;" /></a>
+<p>仿真程序会自动根据程序开始时间创建文件夹, 其中文件包括用于仿真的 gds 版图, fdtd 项目文件, 以及存储仿真器件参数的 json 文件.
+仿真结果同样会被提取出 S 参数与 z=0 截面的电场分布, 存储于 matlab 的数据文件中, 用于后续处理.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="second_example.html" class="btn btn-neutral float-left" title="第二个例子: UMZI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chips.html" class="btn btn-neutral float-right" title="构建 芯片" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Yihan Luo.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

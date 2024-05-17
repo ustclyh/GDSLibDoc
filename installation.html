@@ -45,9 +45,10 @@
               <p class="caption" role="heading"><span class="caption-text">Table of Contents</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#python">Python 环境</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ide">IDE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">工程建立</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python">Python 环境配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#klayout">KLayout 安装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lumerical-fdtd">Lumerical FDTD 配置</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Get Started</a></li>
@@ -79,33 +80,50 @@
              
   <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
-<div class="section" id="python">
-<h2>Python 环境<a class="headerlink" href="#python" title="Permalink to this heading"></a></h2>
-<p>推荐使用 Anaconda3 搭建 Python 环境，Anaconda3 作为软件直接安装即可。</p>
-</div>
-<div class="section" id="ide">
-<h2>IDE<a class="headerlink" href="#ide" title="Permalink to this heading"></a></h2>
-<p>推荐使用 PyCharm Community，直接官网下载并安装即可。</p>
-</div>
 <div class="section" id="id1">
-<h2>配置<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
-<p>Anaconda3 与 PyCharm Community 均安装完毕后，打开 PyCharm Community ，新建工程，工程名即文件夹名
-（例如 GDSLib_gdstk，下文将始终使用该名称示例）。
-展开下方 Python Interpreter 选项卡，选择 New environment using conda ，Python 版本选择最新 3.10。
-点击最下方创建。</p>
-<p>该过程将自动为我们在 conda 中创建名为 GDSLib_gdstk 环境。
-Anaconda 将 Python 环境沙盒化，能够同时在一台电脑中创建多个独立的 Python 环境，多个环境可以使用
-不同的 Python 及模块版本而不产生冲突，十分有利于多个基于不同 Python 版本的项目的同时开发。</p>
-<p>在开始菜单中，进入 Anaconda Powershell Prompt (Anaconda3)。
-分别输入以下命令，第一行激活 PyCharm 为我们创建的环境，随后安装可能需要的模块</p>
+<h2>工程建立<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p>推荐使用 Anaconda3 搭建 Python 环境, Anaconda3 作为软件直接安装即可.</p>
+<p>推荐使用 PyCharm Community, 直接官网下载并安装即可.</p>
+<p>Anaconda3 与 PyCharm Community 均安装完毕后, 打开 PyCharm Community, 在新建工程时选择 Get from VCS.
+如果提示 Git is not installed, 则点击右侧 Download and Install 安装.
+接下来输入 gitee 的仓库链接, 以及账号密码(需授权), 即可同步项目.</p>
+</div>
+<div class="section" id="python">
+<h2>Python 环境配置<a class="headerlink" href="#python" title="Permalink to this heading"></a></h2>
+<p>项目创建后, 打开 File &gt; Settings, 展开下方 Python Interpreter 选项卡, 点击 Add interpreter &gt; Add Local interpreter 创建 Python 环境.</p>
+<a class="reference internal image-reference" href="_images/install1.png"><img alt="alternate text" class="align-center" src="_images/install1.png" style="width: 600px;" /></a>
+<p>选择右侧 Conda Environment, create new environment, 名称改为 GDSLib, Python 版本选择最新 3.10.
+点击最下方OK, 等待完成.
+再将项目的 interpreter 设置成刚刚创建的 conda 环境.</p>
+<a class="reference internal image-reference" href="_images/install2.png"><img alt="alternate text" class="align-center" src="_images/install2.png" style="width: 600px;" /></a>
+<p>该过程将自动为我们在 conda 中创建名为 GDSLib 环境.
+Anaconda 将 Python 环境沙盒化, 能够同时在一台电脑中创建多个独立的 Python 环境, 多个环境可以独立使用.
+不同的 Python 及模块版本而不产生冲突, 十分有利于多个基于不同 Python 版本的项目的同时开发.</p>
+<p>接下来我们配置环境.
+在开始菜单中, 进入 Anaconda Powershell Prompt (Anaconda3)。
+分别输入以下命令，第一行激活 PyCharm 为我们创建的环境, 第二行添加 channel，随后安装可能需要的模块.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">GDSLib_gdstk</span>
+<span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">gdstk</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">numpy</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">scipy</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="n">matplotlib</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="n">colorama</span>
 </pre></div>
 </div>
-<p>至此，Python环境安装完成。</p>
+<p>至此, Python环境安装完成.</p>
+</div>
+<div class="section" id="klayout">
+<h2>KLayout 安装<a class="headerlink" href="#klayout" title="Permalink to this heading"></a></h2>
+<p>KLayout 去官网下载即可, 安装后打开软件, 菜单 Tools &gt; Manage Packages 安装 klive 插件, 用于 Device 的实时预览.</p>
+</div>
+<div class="section" id="lumerical-fdtd">
+<h2>Lumerical FDTD 配置<a class="headerlink" href="#lumerical-fdtd" title="Permalink to this heading"></a></h2>
+<p>器件库包含 Device 的 FDTD 仿真模块, 如果对此有需求, 需要安装 Lumerical FDTD 并进行相关配置.
+打开菜单 File &gt; Settings &gt; Project Structure,</p>
+<a class="reference internal image-reference" href="_images/FDTD.png"><img alt="alternate text" class="align-center" src="_images/FDTD.png" style="width: 600px;" /></a>
+<p>将以下文件夹加入路径即可 C:\Program Files\Lumerical\v241\api, 此时再从 Device 中导入器件, 便不会提示
+No Ansys Lumerical installation, simulation is not accessible.</p>
 </div>
 </div>
 

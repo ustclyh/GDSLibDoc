@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>第二个例子: MZ 干涉仪 &mdash; GDSLib_gdstk 0.0 documentation</title>
+  <title>第二个例子: UMZI &mdash; GDSLib_gdstk 0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="构建 芯片" href="chips.html" />
+    <link rel="next" title="其它功能: 预览和仿真" href="third_example.html" />
     <link rel="prev" title="第一个例子: 波导交叉" href="first_example.html" /> 
 </head>
 
@@ -48,7 +48,13 @@
 <li class="toctree-l1 current"><a class="reference internal" href="gettingstarted.html">Get Started</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="devices.html">构建 Device</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="first_example.html">第一个例子: 波导交叉</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">第二个例子: MZ 干涉仪</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">第二个例子: UMZI</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#ybranch-mmi">YBranch, MMI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spiral">Spiral</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">UMZI 的最终构建</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="third_example.html">其它功能: 预览和仿真</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="chips.html">构建 芯片</a></li>
@@ -74,7 +80,7 @@
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="gettingstarted.html">Get Started</a></li>
           <li class="breadcrumb-item"><a href="devices.html">构建 Device</a></li>
-      <li class="breadcrumb-item active">第二个例子: MZ 干涉仪</li>
+      <li class="breadcrumb-item active">第二个例子: UMZI</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -83,8 +89,398 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="mz">
-<h1>第二个例子: MZ 干涉仪<a class="headerlink" href="#mz" title="Permalink to this heading"></a></h1>
+  <div class="section" id="umzi">
+<h1>第二个例子: UMZI<a class="headerlink" href="#umzi" title="Permalink to this heading"></a></h1>
+<p>第二个例子, 我们以非等臂 Mach-Zehnder 干涉仪为例, 介绍一般情况构建器件的过程, 该例子包含了 Device 类几乎所有可能遇到的操作.
+器件的构造如图所示.</p>
+<a class="reference internal image-reference" href="_images/device5.png"><img alt="alternate text" class="align-center" src="_images/device5.png" style="width: 600px;" /></a>
+<p>该器件包含一个输入端口 i1, 两个输出端口 o1 和 o2.
+此器件的输入首先由一个 YBranch 分束, 经过两个不同长度的延迟线, 最后分别输入 MMI 的两个输入端, MMI 的两个输出端口为该器件的输出.</p>
+<p>由于在构建芯片时, 该器件可能被多次复用, 因此固定设计的器件 (YBranch 和 MMI) 应当被复用.
+器件库的构建充分考虑了这一点, 由同一器件类定义的参数完全相同的器件, 其名称完全相同, 因此在构建芯片时, 均由同一引用给出.
+<strong>同一器件, 无论其位于何层级, 基于本器件库得到的版图文件, 均只占用一份存储空间</strong>.
+在导出 gds 时, 导出函数会递归地自动分析不同 Cell 之间的包含关系, 保证引用的唯一性.</p>
+<div class="section" id="ybranch-mmi">
+<h2>YBranch, MMI<a class="headerlink" href="#ybranch-mmi" title="Permalink to this heading"></a></h2>
+<p>首先, 给出 YBranch, MMI 的定义代码, 这些结构较为简单, 因此不加说明.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">YBranch</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">11.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="mf">64.4</span>  <span class="c1"># opt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wg_y</span> <span class="o">=</span> <span class="mf">2.8</span>  <span class="c1"># measure</span>
+        <span class="c1"># self.tp_width0 = 7.2  # opt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span> <span class="o">=</span> <span class="mf">2.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tp_length</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="mf">1e-4</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_polygon_obj</span><span class="p">(</span>
+            <span class="n">gdstk</span><span class="o">.</span><span class="n">rectangle</span><span class="p">((</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">tp_width0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wg_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wg_y</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="n">tp_width0</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_length</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">((</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_length</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">orientation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MMI</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">13.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="mf">125.2</span>  <span class="c1"># opt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wg_y</span> <span class="o">=</span> <span class="mf">2.2</span>  <span class="c1"># measure</span>
+        <span class="c1"># self.tp_width0 = 7.2  # opt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span> <span class="o">=</span> <span class="mf">2.6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tp_length</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="mf">1e-4</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_polygon_obj</span><span class="p">(</span>
+            <span class="n">gdstk</span><span class="o">.</span><span class="n">rectangle</span><span class="p">((</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">tp_width0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wg_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wg_y</span><span class="p">),</span> <span class="n">width</span><span class="o">=</span><span class="n">tp_width0</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_length</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="spiral">
+<h2>Spiral<a class="headerlink" href="#spiral" title="Permalink to this heading"></a></h2>
+<p>以下代码是构建 Spiral 的类, 主要实现方法均已阐述 (第一个例子中). 主要有两点说明.</p>
+<p>首先, 构建延迟线需要我们追踪延迟线的长度, 其中困难之处在于欧拉曲线, 其结构不规则.
+为此 <code class="docutils literal notranslate"><span class="pre">add_spine()</span></code> 方法提供了一个返回值, 为当前指令绘制曲线的中心线长度, 可基于 <code class="docutils literal notranslate"><span class="pre">self.total_length</span> <span class="pre">+=</span> <span class="pre">self.add_spline()</span></code> 对波导长度进行自动更新.</p>
+<p>第二, 对于 Spiral 这种较为繁琐的结构, 代码使用了循环自动更新每一圈的参数, 循环可以广泛用于器件构建, 以及参数扫描芯片构建等场景.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Spiral</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">2.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">=</span> <span class="mf">3.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inner_L</span> <span class="o">=</span> <span class="mi">115</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offs</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_radius</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="mf">5e-3</span>
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">offs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offs</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_L</span> <span class="o">+</span> <span class="n">offs</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_L</span> <span class="o">/</span> <span class="mf">1.3</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">([</span><span class="o">-</span><span class="n">x</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">offs</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">inner_L</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">offs</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="n">offs</span>
+        <span class="n">xy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="n">dy</span><span class="o">*</span><span class="mf">1.05</span><span class="p">,</span> <span class="o">-</span><span class="n">dy</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.8</span><span class="o">/</span><span class="n">dy</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="o">-</span><span class="n">dy</span><span class="o">*</span><span class="mf">1.05</span><span class="p">,</span> <span class="o">-</span><span class="n">dy</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="n">x</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">curAngle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="o">-</span><span class="n">dy</span> <span class="o">*</span> <span class="mf">1.05</span><span class="p">,</span> <span class="n">dy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.8</span> <span class="o">/</span> <span class="n">dy</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="n">dy</span> <span class="o">*</span> <span class="mf">1.05</span><span class="p">,</span> <span class="n">dy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="n">x</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">total_length</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">curAngle</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">rotate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_radius</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">*</span> <span class="mf">1.1</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_length</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>UMZI 的最终构建<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p>最后, 我们基于 YBranch, MMI 以及 Spircal 器件, 最终构建 UMZI.
+依然同第一个例子一样, 首先直接给出代码.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">UMZI12</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># All the pattern concerning parameters should be masked.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yb_width</span> <span class="o">=</span> <span class="mf">11.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yb_length</span> <span class="o">=</span> <span class="mf">64.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yb_wg_y</span> <span class="o">=</span> <span class="mf">2.8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yb_tp_width1</span> <span class="o">=</span> <span class="mf">2.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yb_tp_length</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmi_width</span> <span class="o">=</span> <span class="mf">11.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmi_length</span> <span class="o">=</span> <span class="mf">64.4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmi_wg_y</span> <span class="o">=</span> <span class="mf">2.8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmi_tp_width1</span> <span class="o">=</span> <span class="mf">2.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmi_tp_length</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_gap</span> <span class="o">=</span> <span class="mf">3.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_N</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_inner_L</span> <span class="o">=</span> <span class="mi">135</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_l_total_length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_s_total_length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_l_offs</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_s_offs</span> <span class="o">=</span> <span class="mi">10</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_gap</span> <span class="o">=</span> <span class="mi">250</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mf">2.2</span>  <span class="c1"># waveguide width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ports</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># initialize the basic elements</span>
+        <span class="n">yb</span> <span class="o">=</span> <span class="n">YBranch</span><span class="p">(</span><span class="s2">&quot;YBranch&quot;</span><span class="p">)</span>
+        <span class="n">yb</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_width</span>
+        <span class="n">yb</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_length</span>
+        <span class="n">yb</span><span class="o">.</span><span class="n">wg_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_wg_y</span>
+        <span class="n">yb</span><span class="o">.</span><span class="n">tp_width1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_tp_width1</span>
+        <span class="n">yb</span><span class="o">.</span><span class="n">tp_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_tp_length</span>
+        <span class="n">yb_name</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">yb_ports</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">ports</span>
+
+        <span class="n">mmi</span> <span class="o">=</span> <span class="n">MMI</span><span class="p">(</span><span class="s2">&quot;MMI22&quot;</span><span class="p">)</span>
+        <span class="n">mmi</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_width</span>
+        <span class="n">mmi</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_length</span>
+        <span class="n">mmi</span><span class="o">.</span><span class="n">wg_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_wg_y</span>
+        <span class="n">mmi</span><span class="o">.</span><span class="n">tp_width1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_tp_width1</span>
+        <span class="n">mmi</span><span class="o">.</span><span class="n">tp_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_tp_length</span>
+        <span class="n">mmi_name</span> <span class="o">=</span> <span class="n">mmi</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">mmi_ports</span> <span class="o">=</span> <span class="n">mmi</span><span class="o">.</span><span class="n">ports</span>
+
+        <span class="n">delay_short</span> <span class="o">=</span> <span class="n">Spiral</span><span class="p">(</span><span class="s2">&quot;Spiral_short&quot;</span><span class="p">)</span>
+        <span class="n">delay_short</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">delay_short</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_N</span>
+        <span class="n">delay_short</span><span class="o">.</span><span class="n">offs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_s_offs</span>
+        <span class="n">delay_short_name</span> <span class="o">=</span> <span class="n">delay_short</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_s_total_length</span> <span class="o">=</span> <span class="n">delay_short</span><span class="o">.</span><span class="n">total_length</span>
+        <span class="n">delay_short_ports</span> <span class="o">=</span> <span class="n">delay_short</span><span class="o">.</span><span class="n">ports</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">delay_short</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">())</span>
+
+        <span class="n">delay_long</span> <span class="o">=</span> <span class="n">Spiral</span><span class="p">(</span><span class="s2">&quot;Spiral_long&quot;</span><span class="p">)</span>
+        <span class="n">delay_long</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+        <span class="n">delay_long</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_N</span>
+        <span class="n">delay_long</span><span class="o">.</span><span class="n">offs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_l_offs</span>
+        <span class="n">delay_long_name</span> <span class="o">=</span> <span class="n">delay_long</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_l_total_length</span> <span class="o">=</span> <span class="n">delay_long</span><span class="o">.</span><span class="n">total_length</span>
+        <span class="n">delay_long_ports</span> <span class="o">=</span> <span class="n">delay_long</span><span class="o">.</span><span class="n">ports</span>
+        <span class="n">dlxy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">delay_long_ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span>
+        <span class="n">dlx</span> <span class="o">=</span> <span class="n">dlxy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dly</span> <span class="o">=</span> <span class="n">dlxy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># add reference of y branch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="n">Device</span><span class="o">.</span><span class="n">devList</span><span class="p">[</span><span class="n">yb_name</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">],</span> <span class="n">yb</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># add waveguide from y branch to delay lines</span>
+        <span class="n">mmi_dy</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">yb_ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">,</span> <span class="n">yb</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curAngle</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="n">mmi_dy</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">yb_ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">110</span><span class="p">,</span> <span class="o">-</span><span class="n">mmi_dy</span><span class="p">]</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">yb_ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">110</span><span class="p">,</span> <span class="o">+</span><span class="n">mmi_dy</span><span class="p">]</span>
+
+        <span class="c1"># add delay lines</span>
+        <span class="n">origin_delay_short</span> <span class="o">=</span> <span class="o">-</span> <span class="n">delay_short_ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span> <span class="o">+</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="n">Device</span><span class="o">.</span><span class="n">devList</span><span class="p">[</span><span class="n">delay_short_name</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin_delay_short</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">+</span> <span class="n">origin_delay_short</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span><span class="p">)</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin_delay_short</span> <span class="o">+</span> <span class="n">delay_short_ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">=</span> <span class="n">delay_short</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span><span class="o">+</span><span class="n">origin_delay_short</span>
+
+        <span class="n">origin_delay_long</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dlx</span><span class="p">,</span> <span class="n">dly</span><span class="p">])</span> <span class="o">+</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="n">Device</span><span class="o">.</span><span class="n">devList</span><span class="p">[</span><span class="n">delay_long_name</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin_delay_long</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">x_reflection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin_delay_long</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">dlx</span><span class="p">,</span> <span class="o">-</span><span class="n">dly</span><span class="p">])</span>
+
+        <span class="c1"># compensate the x diff of two delay lines</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="n">delay_long</span><span class="o">.</span><span class="n">offs</span><span class="o">+</span><span class="n">delay_long</span><span class="o">.</span><span class="n">inner_L</span><span class="o">+</span><span class="mi">115</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">mmi</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">)</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">mmi</span><span class="o">.</span><span class="n">wg_y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="n">dy</span><span class="o">/</span><span class="mf">3.3</span><span class="p">,</span> <span class="n">dy</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="n">dy</span><span class="o">/</span><span class="mf">3.3</span><span class="p">,</span> <span class="n">dy</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="c1"># self.add_segment(30)</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="c1"># add mmi</span>
+        <span class="n">origin_mmi</span> <span class="o">=</span> <span class="o">-</span> <span class="n">mmi_ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span> <span class="o">+</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="n">Device</span><span class="o">.</span><span class="n">devList</span><span class="p">[</span><span class="n">mmi_name</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin_mmi</span><span class="p">)</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin_mmi</span> <span class="o">+</span> <span class="n">mmi_ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin_mmi</span> <span class="o">+</span> <span class="n">mmi_ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span>
+
+        <span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_gap</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="n">mmi</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="n">dy</span><span class="o">/</span><span class="mf">3.3</span><span class="p">,</span> <span class="o">-</span><span class="n">dy</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_spline</span><span class="p">([</span><span class="n">dy</span> <span class="o">/</span> <span class="mf">3.3</span><span class="p">,</span> <span class="o">-</span><span class="n">dy</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">(</span><span class="n">add_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">mirror</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+        <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>此代码较长, 仍然像第一个例子, 分段解释功能.</p>
+<p>类的析构函数 <code class="docutils literal notranslate"><span class="pre">__init__</span></code> 中, 包含了要用到器件的全部参数, 包括 ybranch, mmi 以及两种 spiral.</p>
+<p>接下来分析 <code class="docutils literal notranslate"><span class="pre">draw()</span></code> 方法.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">yb</span> <span class="o">=</span> <span class="n">YBranch</span><span class="p">(</span><span class="s2">&quot;YBranch&quot;</span><span class="p">)</span>
+<span class="n">yb</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_width</span>
+<span class="n">yb</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_length</span>
+<span class="n">yb</span><span class="o">.</span><span class="n">wg_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_wg_y</span>
+<span class="n">yb</span><span class="o">.</span><span class="n">tp_width1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_tp_width1</span>
+<span class="n">yb</span><span class="o">.</span><span class="n">tp_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yb_tp_length</span>
+<span class="n">yb_name</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+<span class="n">yb_ports</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">ports</span>
+
+<span class="n">mmi</span> <span class="o">=</span> <span class="n">MMI</span><span class="p">(</span><span class="s2">&quot;MMI22&quot;</span><span class="p">)</span>
+<span class="n">mmi</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_width</span>
+<span class="n">mmi</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_length</span>
+<span class="n">mmi</span><span class="o">.</span><span class="n">wg_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_wg_y</span>
+<span class="n">mmi</span><span class="o">.</span><span class="n">tp_width1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_tp_width1</span>
+<span class="n">mmi</span><span class="o">.</span><span class="n">tp_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmi_tp_length</span>
+<span class="n">mmi_name</span> <span class="o">=</span> <span class="n">mmi</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+<span class="n">mmi_ports</span> <span class="o">=</span> <span class="n">mmi</span><span class="o">.</span><span class="n">ports</span>
+
+<span class="n">delay_short</span> <span class="o">=</span> <span class="n">Spiral</span><span class="p">(</span><span class="s2">&quot;Spiral_short&quot;</span><span class="p">)</span>
+<span class="n">delay_short</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+<span class="n">delay_short</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_N</span>
+<span class="n">delay_short</span><span class="o">.</span><span class="n">offs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_s_offs</span>
+<span class="n">delay_short_name</span> <span class="o">=</span> <span class="n">delay_short</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">sp_s_total_length</span> <span class="o">=</span> <span class="n">delay_short</span><span class="o">.</span><span class="n">total_length</span>
+<span class="n">delay_short_ports</span> <span class="o">=</span> <span class="n">delay_short</span><span class="o">.</span><span class="n">ports</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">delay_short</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">())</span>
+
+<span class="n">delay_long</span> <span class="o">=</span> <span class="n">Spiral</span><span class="p">(</span><span class="s2">&quot;Spiral_long&quot;</span><span class="p">)</span>
+<span class="n">delay_long</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span>
+<span class="n">delay_long</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_N</span>
+<span class="n">delay_long</span><span class="o">.</span><span class="n">offs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_l_offs</span>
+<span class="n">delay_long_name</span> <span class="o">=</span> <span class="n">delay_long</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">sp_l_total_length</span> <span class="o">=</span> <span class="n">delay_long</span><span class="o">.</span><span class="n">total_length</span>
+<span class="n">delay_long_ports</span> <span class="o">=</span> <span class="n">delay_long</span><span class="o">.</span><span class="n">ports</span>
+<span class="n">dlxy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">delay_long_ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">draw()</span></code> 方法的第一部分, 我们对要使用子器件进行初始化.
+上一段代码进行了四个器件的初始化, 分别是 ybranch, mmi 以及两种不同长度的 spiral.
+使用子器件构建器件的目的, 是在构建器件时我们希望不轻易改变的结构可以被复用, 以及代码的整洁性.
+此外, 子器件也可以作为原子组件用于其它复合器件的构建, 能够增强代码的复用性.</p>
+<p>初始化器件过程非常简单, 主要分为三步:</p>
+<ol class="arabic simple">
+<li><p>创建器件对象, 并修改其属性至所需.</p></li>
+<li><p>生成放置子器件的 PCell, 为此 Device 类已经提供了方法 <code class="docutils literal notranslate"><span class="pre">generate_cell()</span></code>, 该方法将创建 <code class="docutils literal notranslate"><span class="pre">gdstk.Cell</span></code> 对象, 将器件结构放置于该 Cell, 并返回此 Cell. 在此过程中, 将根据器件属性, 自动为子器件命名, 该名称基于器件属性 md5 值计算, 可以认为绝对唯一, 放置于 <code class="docutils literal notranslate"><span class="pre">Cell.name</span></code>, 因此可以通过 <code class="docutils literal notranslate"><span class="pre">generate_cell().name</span></code> 直接获取至变量, 用于接下来的引用生成,.</p></li>
+<li><p>获取子器件的端口信息, 以及 heater_box 信息, 后者用于 heater 创建. 上述代码中, 对于短 spiral, 代码通过调用已生成 Cell 的 <code class="docutils literal notranslate"><span class="pre">Cell.bounding_box()</span></code> 方法, 获取了此器件外边框的信息, 用于 heater_box 生成.</p></li>
+</ol>
+<p>接下来放置器件, 以 ybranch 为例.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># add reference of y branch</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="n">Device</span><span class="o">.</span><span class="n">devList</span><span class="p">[</span><span class="n">yb_name</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">new_path</span><span class="p">(</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">],</span> <span class="n">yb</span><span class="o">.</span><span class="n">tp_width1</span><span class="p">,</span> <span class="n">layers</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">add_segment</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">end_current_path</span><span class="p">()</span>
+<span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">curPath</span><span class="o">.</span><span class="n">spine</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+</pre></div>
+</div>
+<p>以上代码段主要有三个方面需要说明.</p>
+<p>第一, 子器件引用的添加. 为此, Device 类提供了方法 <code class="docutils literal notranslate"><span class="pre">add_reference()</span></code>, 其第一个参数为待生成引用的 <code class="docutils literal notranslate"><span class="pre">gdstk.Cell</span></code> 对象.
+此对象可以用户手动生成, 也可以从 <code class="docutils literal notranslate"><span class="pre">Device.DevList</span></code> 获取.
+当通过 Device 类的 <code class="docutils literal notranslate"><span class="pre">generate_cell</span></code> 方法生成 PCell 时, 此 PCell 对象会被自动加入 Device 类的静态字典, 以供后续调用.
+获取该器件的键值, 即我们通过 <code class="docutils literal notranslate"><span class="pre">generate_cell().name</span></code> 所得的名称.
+这里我们便是从 <code class="docutils literal notranslate"><span class="pre">Device.DevList</span></code> 待放置的 ybranch 的 PCell 对象.
+方法 <code class="docutils literal notranslate"><span class="pre">add_reference()</span></code> 的第二个参数为放置位置, 该 PCell 的原点将被放于此坐标处.</p>
+<p>第二, 在放置器件后, 为了继续连线, 程序自动获取了该器件输出端口的坐标. 在生成 PCell 后, 该子器件的所有参数和性质均确定,
+因此可以直接通过子器件对象的 ports 属性, 获取其端口信息.
+属性 ports 为字典, 通过用户自定义端口名作为键值即可直接得到 Ports 对象, 其属性 xy 记录了此端口的位置.
+从子器件获取的端口位置, 结合 <code class="docutils literal notranslate"><span class="pre">add_reference()</span></code> 给定的平移量, 即可算出放置后器件的端口坐标.</p>
+<p>随后, 此代码段在 ybranch 输入端口之前, 连接了整个器件的输入波导.
+待路径生成完毕后, 调用了 <code class="docutils literal notranslate"><span class="pre">self.curPath</span></code> 的 <code class="docutils literal notranslate"><span class="pre">spine()</span></code> 方法, 获取了路径末端坐标, 存入字典 ports 用于后续器件建立.
+方法 <code class="docutils literal notranslate"><span class="pre">spine()</span></code> 返回当前路径中心轨迹的坐标, 是 xy 坐标的列表, 代码段中通过 <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">:]</span></code> 索引至最后坐标点, 得到路径末端坐标.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">add_reference</span><span class="p">(</span><span class="n">Device</span><span class="o">.</span><span class="n">devList</span><span class="p">[</span><span class="n">delay_long_name</span><span class="p">],</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin_delay_long</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">x_reflection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>以上是最后需要说明的内容, 本语句依然是放置子器件引用, 但额外加入了 rotation 和 x_reflection 两个参数用于结构的变换.
+Device 类提供的图形变换较为基础, 当使用此特性时, 需自行计算变换后末端坐标的位置.
+当平移, 旋转和镜像同时作用于子器件时, 变换顺序为 <strong>镜像&gt;旋转&gt;平移</strong>.</p>
+<p>除以上特殊说明内容外, 构建 UMZI 的其余语句均已在第一个例子中有所介绍, 不再赘述.
+在构建器件过程中, 要善于利用器件库提供的方法获取坐标, 从而更快捷完成结构的搭建.</p>
+</div>
 </div>
 
 
@@ -92,7 +488,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="first_example.html" class="btn btn-neutral float-left" title="第一个例子: 波导交叉" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="chips.html" class="btn btn-neutral float-right" title="构建 芯片" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="third_example.html" class="btn btn-neutral float-right" title="其它功能: 预览和仿真" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
