@@ -47,7 +47,11 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="gettingstarted.html">Get Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="devices.html">构建 Device</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">构建 芯片</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">构建 芯片</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">器件初始化</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">芯片构建</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="heaters.html">添加 Heater</a></li>
 </ul>
 </li>
@@ -80,6 +84,165 @@
              
   <div class="section" id="id1">
 <h1>构建 芯片<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h1>
+<p>具备不同功能的器件, 相互连接构成片上系统. 这一部分结合如下图例子, 讲解基于该器件库的芯片版图绘制.</p>
+<a class="reference internal image-reference" href="_images/chip.png"><img alt="alternate text" class="align-center" src="_images/chip.png" style="width: 600px;" /></a>
+<p>图中集成光路由若干MZ干涉仪和波导交叉构成.
+器件构建仅需放置MZI, 通过调用方法引线, 自动放置和连接波导交叉, 并调用生成芯片 taper 的方法, 即可完芯片版图的绘制.</p>
+<p>我们首先给出图中芯片生成的代码</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize devices</span>
+
+<span class="n">MZI_22</span> <span class="o">=</span> <span class="n">MZI22</span><span class="p">(</span><span class="s2">&quot;MZI&quot;</span><span class="p">)</span>
+<span class="n">mzi_n</span> <span class="o">=</span> <span class="n">MZI_22</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+<span class="n">HeaterBox</span><span class="p">(</span><span class="n">MZI_22</span><span class="p">)</span>
+
+<span class="n">cross</span> <span class="o">=</span> <span class="n">Cross45</span><span class="p">(</span><span class="s2">&quot;Cross45&quot;</span><span class="p">)</span>
+<span class="n">cross45</span> <span class="o">=</span> <span class="n">cross</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+
+<span class="c1"># generate circuit</span>
+
+<span class="n">chip</span> <span class="o">=</span> <span class="n">ChipLayout</span><span class="p">()</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">chipName</span> <span class="o">=</span> <span class="s2">&quot;IQASZ, four-photon GHZ state generation&quot;</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">add_text</span><span class="p">()</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">port_mzi</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">mzi_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1550</span><span class="p">,</span> <span class="o">-</span><span class="mi">2100</span><span class="p">,</span> <span class="o">-</span><span class="mi">500</span><span class="p">):</span>
+    <span class="n">mzi22</span> <span class="o">=</span> <span class="n">chip</span><span class="o">.</span><span class="n">add_reference_by_port</span><span class="p">(</span><span class="n">mzi_n</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1800</span><span class="p">,</span> <span class="n">xx</span><span class="p">],</span> <span class="n">x_reflection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">heater</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">)</span>
+
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_taper_to_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">cross</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_taper_to_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">cross</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="c1"># port_mzi.append(chip.ref_dict[mzi22].ports[&#39;o2&#39;].xy)</span>
+    <span class="n">port_mzi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chip</span><span class="o">.</span><span class="n">ref_dict</span><span class="p">[</span><span class="n">mzi22</span><span class="p">]</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span>
+    <span class="n">mzi_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mzi22</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_mzi</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">crs</span> <span class="o">=</span> <span class="n">chip</span><span class="o">.</span><span class="n">add_reference_by_port</span><span class="p">(</span><span class="n">cross45</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="n">port_mzi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">direct_connect</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">direct_connect</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">)</span>
+
+    <span class="n">chip</span><span class="o">.</span><span class="n">mod_ref_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">mod_ref_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cr_width</span> <span class="o">=</span> <span class="n">chip</span><span class="o">.</span><span class="n">ref_dict</span><span class="p">[</span><span class="n">crs</span><span class="p">]</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">chip</span><span class="o">.</span><span class="n">ref_dict</span><span class="p">[</span><span class="n">crs</span><span class="p">]</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">chip</span><span class="o">.</span><span class="n">mod_ref_port</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="n">cr_width</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+        <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;o2&#39;</span><span class="p">)</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_mzi</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">mod_ref_port</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="n">cr_width</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;o1&#39;</span><span class="p">)</span>
+
+<span class="n">chip</span><span class="o">.</span><span class="n">add_box</span><span class="p">()</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">draw_tapers</span><span class="p">()</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">write_gds</span><span class="p">()</span>
+
+<span class="c1"># below is for heater generation</span>
+<span class="n">dict_heat_xy</span> <span class="o">=</span> <span class="n">chip</span><span class="o">.</span><span class="n">heater_list</span>
+<span class="n">dict_obj</span> <span class="o">=</span> <span class="n">HeaterBox</span><span class="o">.</span><span class="n">heater_dict</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="s2">&quot;heater_info.npz&quot;</span><span class="p">,</span> <span class="n">heat_xy</span><span class="o">=</span><span class="n">dict_heat_xy</span><span class="p">,</span> <span class="n">obj_info</span><span class="o">=</span><span class="n">dict_obj</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>上述代码主要分为三个部分: 器件初始化; 芯片构建; heater 信息导出 (如无需 heater 可跳过).
+以下将分三个部分说明.</p>
+<div class="section" id="id2">
+<h2>器件初始化<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># initialize devices</span>
+
+<span class="n">MZI_22</span> <span class="o">=</span> <span class="n">MZI22</span><span class="p">(</span><span class="s2">&quot;MZI&quot;</span><span class="p">)</span>
+<span class="n">mzi_n</span> <span class="o">=</span> <span class="n">MZI_22</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+<span class="n">HeaterBox</span><span class="p">(</span><span class="n">MZI_22</span><span class="p">)</span>
+
+<span class="n">cross</span> <span class="o">=</span> <span class="n">Cross45</span><span class="p">(</span><span class="s2">&quot;Cross45&quot;</span><span class="p">)</span>
+<span class="n">cross45</span> <span class="o">=</span> <span class="n">cross</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>以上代码段初始化器件.
+具体代码与构建 Device 时的子器件初始化类似, 需要注意的是, 器件的自动生成名称需要用变量保存, 后续放置时用于标识器件.
+如器件需要添加 heater, 则需要通过 HeaterBox 注册器件的 heater 信息.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>需要注意, 器件初始化时, 器件的自定义名称较为重要, 自定义名称指初始化对象时给如的参数, 例如 Cross45(“Cross45”), 此器件自定义名称便为 Cross45.
+此名称在放置该器件时, 会连同器件 id 共同构成标识符, 以 Label 的形式显示于 GDS 版图上.
+后续生成 heater 时, GDS 版图上显示的器件 Label 作为器件的唯一标识符, 用于 heater 的绘制.</p>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>芯片构建<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
+<p>这一部分是芯片构建的最关键部分.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">chip</span> <span class="o">=</span> <span class="n">ChipLayout</span><span class="p">()</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">chipName</span> <span class="o">=</span> <span class="s2">&quot;IQASZ, four-photon GHZ state generation&quot;</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">add_text</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>首先通过如上代码创建芯片对象, 属性 chipName 为添加至芯片左上角的芯片标签, 通过不加参数的 <code class="docutils literal notranslate"><span class="pre">add_text()</span></code> 方法放置芯片名称.
+事实上, 通过调用 <code class="docutils literal notranslate"><span class="pre">add_text()</span></code> 方法, 可以为芯片添加任何文字, 放置于任何位置, 详情见API Reference.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">port_mzi</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">mzi_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">xx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1550</span><span class="p">,</span> <span class="o">-</span><span class="mi">2100</span><span class="p">,</span> <span class="o">-</span><span class="mi">500</span><span class="p">):</span>
+    <span class="n">mzi22</span> <span class="o">=</span> <span class="n">chip</span><span class="o">.</span><span class="n">add_reference_by_port</span><span class="p">(</span><span class="n">mzi_n</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1800</span><span class="p">,</span> <span class="n">xx</span><span class="p">],</span> <span class="n">x_reflection</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">heater</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">)</span>
+
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_taper_to_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">cross</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">chip</span><span class="o">.</span><span class="n">add_taper_to_port</span><span class="p">(</span><span class="n">mzi22</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">cross</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+    <span class="c1"># port_mzi.append(chip.ref_dict[mzi22].ports[&#39;o2&#39;].xy)</span>
+    <span class="n">port_mzi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chip</span><span class="o">.</span><span class="n">ref_dict</span><span class="p">[</span><span class="n">mzi22</span><span class="p">]</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span>
+    <span class="n">mzi_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mzi22</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>上述代码段为放置器件的第一部分, 其中包含若干芯片构建方法的调用.</p>
+<p>首先是 <code class="docutils literal notranslate"><span class="pre">add_reference_by_port</span></code>, 此方法通过端口放置器件, 即, 放置此器件使其 X 端口位于特定坐标处.
+此方法第一个参数是调用器件的名称 (自动生成的名称), 第二个参数为端口名, 第三个参数 id 为标识符, 建议按照数字顺序给相同器件从 0 开始编号,
+第四个参数为坐标.
+后三个参数可选, 分别是反射, 旋转以及是否需要添加 heater.</p>
+<p>该方法将自动根据端口放置的坐标, 是否镜像以及旋转, 自动计算引用的偏移量, 放置器件引用.
+此外, 还会根据放置信息, 自动更新该器件引用的各端口坐标和端口角度.
+此方法生成的引用, 会放置于字典 <code class="docutils literal notranslate"><span class="pre">ChipLayout.ref_dict</span></code>, 键值由程序自动生成, 调用 <code class="docutils literal notranslate"><span class="pre">add_reference_by_port</span></code> 生成引用时, 索引该引用所需键值会以返回值形式返给用户.
+因此, 以上代码段, 通过循环放置的 MZI, 在进入下一轮循环前, 便可通过变量 mzi22 通过引用的字典查询其端口信息.</p>
+<p>放置好的 MZI, 其输入端口我们希望其作为芯片端口, 后续通过 taper 与片外光学系统通过光纤耦合, 因此需要将其输入注册为芯片端口.
+类 ChipLayout 提供了方法 <code class="docutils literal notranslate"><span class="pre">add_chip_port</span></code> 完成此功能, 注册后的芯片端口, 调用 <code class="docutils literal notranslate"><span class="pre">draw_tapers()</span></code> 方法将自动生成 taper.</p>
+<p>MZI 的输出口, 我们进一步希望连接至波导交叉, 但 MZI 的输出波导宽度与波导交叉的输入端口宽度不同, 因此需要添加 taper 用于宽度匹配.
+类 ChipLayout 提供了方法 <code class="docutils literal notranslate"><span class="pre">add_taper_to_port</span></code>, 只需给定待添加 taper 的器件引用标识以及端口名, 并给定目标宽度和taper长度, 方法便能够自动生成一段taper, 并更新字典 <code class="docutils literal notranslate"><span class="pre">ChipLayout.ref_dict</span></code> 中存储的端口信息.</p>
+<p>为了更方便地完成下一层器件的连接, 程序创建了两个 list 存储 MZI 的输出端口信息以及索引名称.</p>
+<p>至此, 我们完成了第一层 MZI 的放置. 接下来我们放置第二层波导交叉, 借此介绍更多构建芯片的方法.
+代码段如下</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_mzi</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+   <span class="n">crs</span> <span class="o">=</span> <span class="n">chip</span><span class="o">.</span><span class="n">add_reference_by_port</span><span class="p">(</span><span class="n">cross45</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="n">port_mzi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+   <span class="n">chip</span><span class="o">.</span><span class="n">direct_connect</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">)</span>
+   <span class="n">chip</span><span class="o">.</span><span class="n">direct_connect</span><span class="p">(</span><span class="n">mzi_list</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;i1&#39;</span><span class="p">)</span>
+
+   <span class="n">chip</span><span class="o">.</span><span class="n">mod_ref_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+   <span class="n">chip</span><span class="o">.</span><span class="n">mod_ref_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="p">[[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+   <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o1&#39;</span><span class="p">)</span>
+   <span class="n">chip</span><span class="o">.</span><span class="n">add_chip_port</span><span class="p">(</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>器件的放置依然以 <code class="docutils literal notranslate"><span class="pre">add_reference_by_port</span></code> 方法的调用开始. 与此前不同的是, 这里的 origin 参数直接传入了在放置 mzi22 时获取的端口信息.
+在此端口基础上, 加入统一的坐标偏移, 完成波导交叉的放置.
+直接放置的波导交叉与其它元件并无连接, 因此程序包提供了方法 <code class="docutils literal notranslate"><span class="pre">direct_connect</span></code>.
+调用它即可完成指定 元件:端口 间的连接.</p>
+<p>软件包还提供了方法 <code class="docutils literal notranslate"><span class="pre">mod_ref_port</span></code> 用于更改特定器件的端口, 其第三个参数为所加入线段的 [dx, dy, 末端方向, 末端曲率] 所构成的列表.
+最后, 程序调用了 <code class="docutils literal notranslate"><span class="pre">add_chip_port</span></code> 注册输出端口.</p>
+<p>在完成器件的放置, 连接以及端口定义后, 还需加入芯片 Box 以及 taper, 并输出 GDS 文件.
+上述功能可通过以下代码实现.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">chip</span><span class="o">.</span><span class="n">add_box</span><span class="p">()</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">draw_tapers</span><span class="p">()</span>
+<span class="n">chip</span><span class="o">.</span><span class="n">write_gds</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 

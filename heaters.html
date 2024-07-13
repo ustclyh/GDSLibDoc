@@ -48,7 +48,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="gettingstarted.html">Get Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="devices.html">构建 Device</a></li>
 <li class="toctree-l2"><a class="reference internal" href="chips.html">构建 芯片</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">添加 Heater</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">添加 Heater</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">放置 Heater</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reference_python.html">API Reference</a></li>
@@ -80,6 +83,53 @@
              
   <div class="section" id="heater">
 <h1>添加 Heater<a class="headerlink" href="#heater" title="Permalink to this heading"></a></h1>
+<p>程序包还提供了 heater 的相关绘制功能.
+在调用相关方法之前, 我们需要在绘制芯片时加入相关代码, 生成与heater放置相关的配置文件.
+以芯片构建的例子说明, 在 MZI22 器件的定义时, 我们需给定类的属性 <code class="docutils literal notranslate"><span class="pre">heater_box</span></code>, 存放绘制heater的盒子坐标.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">heater_box</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">delay_short</span><span class="o">.</span><span class="n">cell</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>在构建芯片, 初始化基本器件后, 用器件对象生成 HeaterBox 对象, 并注册, 代码如下</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">MZI_22</span> <span class="o">=</span> <span class="n">MZI22</span><span class="p">(</span><span class="s2">&quot;MZI&quot;</span><span class="p">)</span>
+<span class="n">mzi_n</span> <span class="o">=</span> <span class="n">MZI_22</span><span class="o">.</span><span class="n">generate_cell</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+<span class="n">HeaterBox</span><span class="p">(</span><span class="n">MZI_22</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>并在程序结束加入如下代码</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dict_heat_xy</span> <span class="o">=</span> <span class="n">chip</span><span class="o">.</span><span class="n">heater_list</span>
+<span class="n">dict_obj</span> <span class="o">=</span> <span class="n">HeaterBox</span><span class="o">.</span><span class="n">heater_dict</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="s2">&quot;heater_info.npz&quot;</span><span class="p">,</span> <span class="n">heat_xy</span><span class="o">=</span><span class="n">dict_heat_xy</span><span class="p">,</span> <span class="n">obj_info</span><span class="o">=</span><span class="n">dict_obj</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>放置 Heater<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<p>以下代码便完成了放置 heater</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ChipConstructors</span> <span class="kn">import</span> <span class="n">HeaterGenerator</span>
+<span class="n">infofile</span> <span class="o">=</span> <span class="s2">&quot;heater_info.npz&quot;</span>
+<span class="n">heater</span> <span class="o">=</span> <span class="n">HeaterGenerator</span><span class="p">(</span><span class="n">infofile</span><span class="p">)</span>
+<span class="c1"># heater.add_heater_box()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
+    <span class="n">heater</span><span class="o">.</span><span class="n">draw_heater</span><span class="p">(</span><span class="s2">&quot;MZI&quot;</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>其中给入方法 <code class="docutils literal notranslate"><span class="pre">draw_heater</span></code> 的参数即通过chip构建方法, 在gds文件中所显示的label.
+我们接下来希望能够将heater引线至芯片边缘.
+因此, 需要在芯片边缘放置用于外部引线的pad, 以及将heater连接至pad上.</p>
+<p>绘制 pad 的代码非常简单,
+.. code-block:: python</p>
+<blockquote>
+<div><p>heater.add_edge_pad(list(range(-2350, 2350, 150)), [2300, -2300])</p>
+</div></blockquote>
+<p>仅需给定 x 和 y 坐标的list即可, 程序会自动mesh得到pad阵列.
+接下来的引线也较为简单, 代码如下
+.. code-block:: python</p>
+<blockquote>
+<div><p>heater.add_wire(“MZI_4”, 1, [[-10, 0], [0, 1800], [0, 300]], 10)</p>
+</div></blockquote>
+<p>其中, 第一个参数为显示于 GDS 版图中的器件label, 第二个参数为heater的Pad编号, 第三个参数为路径参数.
+路径参数是 [dx, dy] 构成的列表.
+最后一个参数是 <code class="docutils literal notranslate"><span class="pre">add_edge_pad</span></code> 方法生成Pad的编号, 程序会自动从指定路径末端连接至该Pad.</p>
+</div>
 </div>
 
 
